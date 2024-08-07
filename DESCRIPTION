@@ -1,0 +1,32 @@
+Package: vineBC
+Title: Vine Copula based Bias Correction for Climate Models
+Version: 0.0.2.0
+Authors@R: 
+    person("Henri", "Funk", , "H.Funk@lmu.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0007-0949-8385"))
+Description: vineBC implements a method to correct the bias in simulated
+  climate data with observed data while preserving the internal variability of
+  the model. To evaluate the method and compare it with others, several post hoc 
+  diagnostic measures are provided. The MCI is a measure to evaluate how well
+  the correction method preserved the rank structure of model data. Wasserstein
+  metrics can be calculated to determine, how distant the distributions of 
+  corrected and measured data are.
+License: LGPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports:
+  checkmate,
+  data.table,
+  kde1d,
+  rvinecopulib,
+  transport,
+Suggests: 
+    testthat (>= 3.0.0),
+    spelling,
+    MBC
+Config/testthat/edition: 3
+Language: en-US
+Depends: 
+    R (>= 2.10)
+LazyData: true
