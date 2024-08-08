@@ -2,7 +2,7 @@
 
 export(calc_mci)
 export(calc_wasserstein)
-export(vine_correct)
+export(vbc)
 import(checkmate)
 import(data.table)
 import(kde1d)

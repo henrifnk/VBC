@@ -1,7 +1,7 @@
 # utils ------------------------------------------------------------------------
 #' Calculate Margins
 #'
-#' @inheritParams vine_correct
+#' @inheritParams vbc
 #' @param dta [data.table]\cr
 #' Data to calculate the margins.
 #' @param kde [list]\cr

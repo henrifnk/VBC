@@ -7,7 +7,7 @@
 #' @param data [data.frame]\cr
 #' Data to estimate the multivariate distribution.
 #' 
-#' @inheritParams vine_correct
+#' @inheritParams vbc
 #' 
 #' @return The PIT-transformed margins from [calculate_margins()]. Additionally
 #' the data frame contains the attribute `vine` with the vine copula model and

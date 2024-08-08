@@ -22,7 +22,7 @@
 #' @param p `numeric(1)`\cr
 #'  The power of the global MCI. Default is 2.
 #'
-#' @inheritParams vine_correct
+#' @inheritParams vbc
 #'
 #' @return [data.table]\cr
 #' Contains the points of time if supplied in `time_p` and the respective

@@ -4,6 +4,9 @@
 #' @description
 #' The multivariate distribution functions of model and observed are estimated
 #' via vine copula estimation (see [rvinecopulib::vine]).
+#' This method provides the tool to model the multivariate distribution function
+#' of the climate data by Vine Copulas. The climate variables may be zero
+#' inflated.
 #' The quantiles are then mapped via (inverse) Rosenblatt transformation from
 #' the model to the observed distribution. The corrected data are mapped to the
 #' projection domain via delta mapping. The steps are equivalent to those in
@@ -66,10 +69,9 @@
 #' @import kde1d
 #' @import data.table
 #' @export
-vine_correct <- function(oc, mc, mp, var_names = colnames(oc),
-                         margins_controls = list(mult = NULL, xmin = NaN,
-                                                 xmax = NaN, bw = NA, deg = 2,
-                                                 type = "c"), ...) {
+vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
+  mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type = "c"
+), ...) {
   check_vbc_args(oc, mc, mp, var_names)
   mc_kde <- attr(calculate_margins(mc, margins_controls), "kde")
   mpu <- model_vine(mp, margins_controls, ...)
@@ -80,7 +82,7 @@ vine_correct <- function(oc, mc, mp, var_names = colnames(oc),
     rep(NA, times = ncol(oc))
   } else {
     margins_controls$xmin
-   }
+  }
   xproj <- mapply(map_delta, mp = mp, mph = data.frame(x_mph),
                   mp_kde = attr(mpu, "kde"), mc_kde = mc_kde, xmin = xmin,
                   SIMPLIFY = TRUE)
@@ -90,13 +92,14 @@ vine_correct <- function(oc, mc, mp, var_names = colnames(oc),
   attr(xproj, "kde_oc") <- attr(ocu, "kde")
   attr(xproj, "vine_mp") <- attr(mpu, "vine")
   attr(xproj, "kde_mp") <- attr(mpu, "kde")
+  class(xproj) <- c("vbc", class(xproj))
   xproj
 }
 
 # utils ------------------------------------------------------------------------
 
 #' @title Check arguments for vine correction
-#' @inheritParams vine_correct
+#' @inheritParams vbc
 #' @import checkmate
 check_vbc_args <- function(oc, mc, mp, var_names) {
   if(is.list(oc)) {

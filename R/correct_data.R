@@ -1,10 +1,10 @@
 #' Correct data by Rosenblatt transformation
 #' 
 #' @param mpu [data.table]\cr
-#' Model data from [vine_correct()].
+#' Model data from [vbc()].
 #' 
 #' @param ocu [data.table]\cr
-#' Observed data from [vine_correct()].
+#' Observed data from [vbc()].
 #' 
 #' @param z_inf `logical(1)`\cr
 #' If `TRUE` at least one margin is zero inflated.

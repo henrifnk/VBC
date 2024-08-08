@@ -8,10 +8,10 @@ correct_rosenblatt(mpu, ocu, z_inf = FALSE)
 }
 \arguments{
 \item{mpu}{\link{data.table}\cr
-Model data from \code{\link[=vine_correct]{vine_correct()}}.}
+Model data from \code{\link[=vbc]{vbc()}}.}
 
 \item{ocu}{\link{data.table}\cr
-Observed data from \code{\link[=vine_correct]{vine_correct()}}.}
+Observed data from \code{\link[=vbc]{vbc()}}.}
 
 \item{z_inf}{\code{logical(1)}\cr
 If \code{TRUE} at least one margin is zero inflated.}
