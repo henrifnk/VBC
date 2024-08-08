@@ -1,4 +1,4 @@
-Package: vineBC
+Package: VBC
 Title: Vine Copula based Bias Correction for Climate Models
 Version: 0.0.2.0
 Authors@R: 

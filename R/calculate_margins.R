@@ -21,7 +21,7 @@ calculate_margins = function(dta, margins_controls, kde = NULL) {
     u_sub <- u
     u_sub[, which(margins_controls$type == "zi")] <- do.call(
       "cbind", lapply(which(margins_controls$type == "zi"), function(zero_v) {
-        u_sub[dta[, ..zero_v] == 0, zero_v] <- pkde1d(-1e300, kde[[zero_v]])
+        u_sub[dta[, get("zero_v")] == 0, zero_v] <- pkde1d(-1e300, kde[[zero_v]])
         u_sub[, zero_v]
       }))
     u_final = cbind.data.frame(u, u_sub)

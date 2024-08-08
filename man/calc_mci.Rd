@@ -9,8 +9,8 @@ calc_mci(
   model_correction,
   time_p = NA,
   p = 2,
-  zero_inf = rep(FALSE, times = ncol(model)),
-  margins_controls = list(mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2),
+  margins_controls = list(mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type =
+    "c"),
   ...
 )
 }
@@ -30,15 +30,6 @@ information are given.}
 \item{p}{\code{numeric(1)}\cr
 The power of the global MCI. Default is 2.}
 
-\item{zero_inf}{\link{double}\cr
-A vector of the length of climate variables to correct. The n-th element in
-the vector indicates if the n-th climate variable is zero inflated.
-\itemize{
-\item \code{TRUE} indicates a zero inflated climate variable
-\item \code{FALSE} indicates a non-zero inflated climate variable
-Defaults to \code{FALSE} for all climate variables.
-}}
-
 \item{margins_controls}{\link{list}\cr
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
 \itemize{
@@ -49,6 +40,10 @@ kernel density estimation are multiplied with \code{mult}. Defaults to
 \item \code{xmax} numeric vector of length d; see \code{\link[kde1d:kde1d]{kde1d::kde1d()}}.
 \item \code{bw} numeric vector of length d; see \code{\link[kde1d:kde1d]{kde1d::kde1d()}}.
 \item \code{deg} numeric vector of length one or d; \code{\link[kde1d:kde1d]{kde1d::kde1d()}}.
+\item \code{type} character vector of length one or d; must be one of
+c, cont, continuous for continuous variables, one of d, disc, discrete for
+discrete integer variables, or one of zi, zinfl, zero-inflated for
+zero-inflated variables.
 }}
 
 \item{...}{\cr
@@ -61,56 +56,32 @@ specified with the same arguments.}
 Contains the points of time if supplied in \code{time_p} and the respective
 local MCI. Note that the last time step is truncated while derivation. The
 attribute global contains the global MCI, which is the mean over all MCI
-scores.
+scores. The estimated multivariate distribution of model and correction are
+placed in attributes in of the returned object.
 }
 \description{
-MCI provides a score to quantify how strong the correction method
-transformed the multivariate temporal rank structure of the model between two
-timesteps t and t+1. This method can be used to quantify the impact of the
-Bias Correction on the temporal rank structure of the climate model by
-comparing the rank structure of the model before and after the bias
-correction.
+MCI provides a score to quantify how invasive the correction method
+transformed the multivariate temporal rank structure of the model after
+correcting the model bias. Therefore, this model compares non-excedance
+probabilities of an event t before and after bias correction. A noninvaseive
+method preserves the model-specific rank structure.
 }
 \examples{
 #' \dontrun{
-#' library(MBC)
 #' data("climate")
 #' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew")])
-#' margins_controls = list(xmin = c(0, NaN, NaN))
-#' zero_inf = c(TRUE, FALSE, FALSE)
+#' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
 #' mp_vbc = vine_correct(climate_sub$oc, climate_sub$mc, climate_sub$mp,
 #'                       margins_controls = margins_controls,
-#'                       zero_inf = zero_inf, family_set = "tll",
-#'                       trunc_lvl = Inf)
+#'                       family_set = "tll", trunc_lvl = Inf)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))
-#' mp_ubc = mapply(QDM, o.c = climate_sub$oc, m.c = climate_sub$mc,
-#'                 m.p = climate_sub$mp, ratio = c(TRUE, FALSE, FALSE),
-#'                 trace = c(0.01, Inf, Inf), SIMPLIFY = FALSE)
-#' mp_ubc = do.call(cbind.data.frame, lapply(mp_ubc, function(var) var$mhat.p))
-#' mp_mbcn = data.frame(MBCn(o.c = climate_sub$oc, m.c = climate_sub$mc,
-#'                           m.p = climate_sub$mp, ratio.seq = c(TRUE, FALSE, FALSE),
-#'                           trace = c(0.01, Inf, Inf), silent = TRUE)$mhat.p)
-#' colnames(mp_mbcn) = colnames(mp_vbc)
-#' c(
-#'   "ubc" = attr(calc_mci(climate_sub$mp, mp_ubc,
-#'                         margins_controls = margins_controls,
-#'                         zero_inf = zero_inf, family_set = "tll",
-#'                         trunc_lvl = Inf), "global"),
-#'   "vbc" = attr(calc_mci(climate_sub$mp, mp_vbc,
-#'                         margins_controls = margins_controls,
-#'                         zero_inf = zero_inf, family_set = "tll",
-#'                         trunc_lvl = Inf), "global"),
-#'   "mbcn" = attr(calc_mci(climate_sub$mp, mp_mbcn,
-#'                          margins_controls = margins_controls,
-#'                          zero_inf = zero_inf, family_set = "tll",
-#'                          trunc_lvl = Inf), "global")
-#' )
-#'
-#' list(
-#'   "ubc" = calc_wasserstein(climate_sub$oc, mp_ubc),
-#'   "vbc" = calc_wasserstein(climate_sub$oc, mp_vbc),
-#'   "mbcn" = calc_wasserstein(climate_sub$oc, mp_mbcn)
+#' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
+#'          margins_controls = margins_controls,
+#'          family_set = "tll", trunc_lvl = Inf)
+#' rbind(
+#'  uncorrected = calc_wasserstein(climate_sub$oc, climate_sub$mp),
+#'  corrected = calc_wasserstein(climate_sub$oc, mp_vbc),
 #' )
 #' }
 }

@@ -71,51 +71,26 @@ vine_correct <- function(oc, mc, mp, var_names = colnames(oc),
                                                  xmax = NaN, bw = NA, deg = 2,
                                                  type = "c"), ...) {
   check_vbc_args(oc, mc, mp, var_names)
-  ocu <- calculate_margins(oc, margins_controls)
-  oc_kde <- attr(ocu, "kde")
-
-  mpu <- calculate_margins(mp, margins_controls)
   mc_kde <- attr(calculate_margins(mc, margins_controls), "kde")
-  if(any(margins_controls$type == "zi")) {
-    vec = which(rep(margins_controls$type == "zi", times = 2))
-    ocu[, -vec] = pseudo_obs(ocu[, -vec], ties_method = 'random')
-    mpu[, -vec] = pseudo_obs(mpu[, -vec], ties_method = 'random')
-  } else {
-    mpu = pseudo_obs(mpu, ties_method = 'random')
-    ocu = pseudo_obs(ocu, ties_method = 'random')
-  }
-  var_types = ifelse(margins_controls$type == "zi", "d", "c")
-  vine_oc <- vinecop(ocu, var_types = var_types, ...)
-  vine_oc$var_types = rep("c", times = ncol(mp))
-  vine_mp <- vinecop(mpu, var_types = var_types, ...)
-  if(any(margins_controls$type == "zi")) {
-    mpu_m <- as.matrix(mpu)
-    mpu_m <- flatten_zi_margins(mpu_m, margins_controls$type == "zi")
-    u = rosenblatt_discrete(mpu_m, vine_mp)
-  } else {
-    u = rosenblatt(mpu, vine_mp)
-  }
-  u <- pseudo_obs(u, ties_method = 'average')
-  u_mph = inverse_rosenblatt(u, vine_oc)
-  u_mph <- pseudo_obs(u_mph, ties_method = 'average')
-  x_mph <- mapply(function(u, kde) {
-    qkde1d(u, kde)
-  }, u = data.table(u_mph), kde = oc_kde)
+  mpu <- model_vine(mp, margins_controls, ...)
+  ocu <- model_vine(oc, margins_controls, ...)
+  attr(ocu, "vine")$var_types = rep("c", times = ncol(mp))
+  x_mph <- correct_rosenblatt(mpu, ocu, any(margins_controls$type == "zi"))
   xmin = if(length(margins_controls$xmin) != ncol(oc)) {
     rep(NA, times = ncol(oc))
   } else {
     margins_controls$xmin
    }
-  final <- mapply(map_delta, mp = mp, mph = data.frame(x_mph),
+  xproj <- mapply(map_delta, mp = mp, mph = data.frame(x_mph),
                   mp_kde = attr(mpu, "kde"), mc_kde = mc_kde, xmin = xmin,
                   SIMPLIFY = TRUE)
-  final <- data.table(final)
-  colnames(final) <- var_names
-  attr(final, "vine_oc") <- vine_oc
-  attr(final, "kde_oc") <- attr(ocu, "kde")
-  attr(final, "vine_mp") <- vine_mp
-  attr(final, "kde_mp") <- attr(mpu, "kde")
-  final
+  xproj <- data.table(xproj)
+  colnames(xproj) <- var_names
+  attr(xproj, "vine_oc") <- attr(ocu, "vine")
+  attr(xproj, "kde_oc") <- attr(ocu, "kde")
+  attr(xproj, "vine_mp") <- attr(mpu, "vine")
+  attr(xproj, "kde_mp") <- attr(mpu, "kde")
+  xproj
 }
 
 # utils ------------------------------------------------------------------------
@@ -136,57 +111,4 @@ check_vbc_args <- function(oc, mc, mp, var_names) {
   assert_set_equal(apply(mc, 2, class), apply(mp, 2, class), ordered = TRUE)
   assert_character(var_names, any.missing = FALSE, unique = TRUE,
                    len = ncol(mp))
-}
-
-#' @title Delta mapping
-#' @description
-#' Map the rank delta in model between calibration period `mc` and projection
-#' period `mp` on corrected projection period `mph` to correct for climate
-#' trends. For ratio scaled variables, multiplicative delta scheme is applied
-#' while for other
-#'
-#' @param mp [double]\cr
-#'  uncorrected climate variable in projection period.
-#' @param mph [double]\cr
-#'  corrected climate variable in projection period.
-#' @param mp_kde [kde1d::kde1d]\cr
-#'  a kernel density estimation of the climate variable in projection period.
-#' @param mc_kde [kde1d::kde1d]\cr
-#'  a kernel density estimation of the climate variable in calibration period.
-#' @param xmin double(1)\cr
-#'  A vector indicating if xmin is a ratio variable type or any other type (NA).
-#' @return A climate variable that is corrected by the climate trend in the
-#' model between correction and projection period.
-map_delta <- function(mp, mph, mp_kde, mc_kde, xmin = NA) {
-  mpu <- pkde1d(mp, mp_kde)
-  mc_p <- qkde1d(mpu, mc_kde)
-  if(is.na(xmin)) {
-    delta <- mp - mc_p
-    return(mph + delta)
-  } else {
-    delta_rat <- mp / mc_p
-    delta_rat[is.na(delta_rat)] <- 1
-    mph_c <- mph * delta_rat
-    delta_add <- mp - mc_p
-    mph_c[delta_rat > 1] <- mph[delta_rat > 1] + delta_add[delta_rat > 1]
-    return(mph_c)
-  }
-}
-
-#' @title Flatten zero inflated margins
-#' @param margins [data.frame]\cr
-#'  The margins of the climate data.
-#' @param eps [double]\cr
-#' A small number to avoid zero and one values in zero inflated margins.
-#' @inheritParams vine_correct
-#' @return Flatten zero inflated margins.
-flatten_zi_margins <- function(margins, zero_inf, eps = 1e-10) {
-  vec = which(rep(zero_inf, times = 2))
-  margins_z = margins[, vec]
-  margins_z[margins_z == 1] <- 1 - eps
-  margins[, vec] = margins_z
-  margins_z = margins[ , which(zero_inf)]
-  margins_z[margins_z == 0] <- 0 + eps
-  margins[ , which(zero_inf)] = margins_z
-  margins
 }

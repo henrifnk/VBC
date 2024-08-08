@@ -38,44 +38,20 @@ distribution of the model data after the correction.
 }
 \examples{
 #' \dontrun{
-#' library(MBC)
 #' data("climate")
 #' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew")])
-#' margins_controls = list(xmin = c(0, NaN, NaN))
-#' zero_inf = c(TRUE, FALSE, FALSE)
+#' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
 #' mp_vbc = vine_correct(climate_sub$oc, climate_sub$mc, climate_sub$mp,
 #'                       margins_controls = margins_controls,
-#'                       zero_inf = zero_inf, family_set = "tll",
-#'                       trunc_lvl = Inf)
+#'                       family_set = "tll", trunc_lvl = Inf)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))
-#' mp_ubc = mapply(QDM, o.c = climate_sub$oc, m.c = climate_sub$mc,
-#'                 m.p = climate_sub$mp, ratio = c(TRUE, FALSE, FALSE),
-#'                 trace = c(0.01, Inf, Inf), SIMPLIFY = FALSE)
-#' mp_ubc = do.call(cbind.data.frame, lapply(mp_ubc, function(var) var$mhat.p))
-#' mp_mbcn = data.frame(MBCn(o.c = climate_sub$oc, m.c = climate_sub$mc,
-#'                           m.p = climate_sub$mp, ratio.seq = c(TRUE, FALSE, FALSE),
-#'                           trace = c(0.01, Inf, Inf), silent = TRUE)$mhat.p)
-#' colnames(mp_mbcn) = colnames(mp_vbc)
-#' c(
-#'   "ubc" = attr(calc_mci(climate_sub$mp, mp_ubc,
-#'                         margins_controls = margins_controls,
-#'                         zero_inf = zero_inf, family_set = "tll",
-#'                         trunc_lvl = Inf), "global"),
-#'   "vbc" = attr(calc_mci(climate_sub$mp, mp_vbc,
-#'                         margins_controls = margins_controls,
-#'                         zero_inf = zero_inf, family_set = "tll",
-#'                         trunc_lvl = Inf), "global"),
-#'   "mbcn" = attr(calc_mci(climate_sub$mp, mp_mbcn,
-#'                          margins_controls = margins_controls,
-#'                          zero_inf = zero_inf, family_set = "tll",
-#'                          trunc_lvl = Inf), "global")
-#' )
-#'
-#' list(
-#'   "ubc" = calc_wasserstein(climate_sub$oc, mp_ubc),
-#'   "vbc" = calc_wasserstein(climate_sub$oc, mp_vbc),
-#'   "mbcn" = calc_wasserstein(climate_sub$oc, mp_mbcn)
+#' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
+#'          margins_controls = margins_controls,
+#'          family_set = "tll", trunc_lvl = Inf)
+#' rbind(
+#'  uncorrected = calc_wasserstein(climate_sub$oc, climate_sub$mp),
+#'  corrected = calc_wasserstein(climate_sub$oc, mp_vbc),
 #' )
 #' }
 }

@@ -41,4 +41,15 @@ sfcWind: surface wind speed (m s-1)
 
 time: date and time in three hourly resolution
 }
+\references{
+Leduc, M., Mailhot, A., Frigon, A., Martel, J. L., Ludwig, R.,
+Brietzke, G. B., ... & Scinocca, J. (2019). The ClimEx project: A 50-member
+ensemble of climate change projections at 12-km resolution over Europe and
+northeastern North America with the Canadian Regional Climate Model (CRCM5).
+Journal of Applied Meteorology and Climatology, 58(4), 663-693.
+
+Wood, R. R., Willkofer, F., Schmid, F. J., Trentini, F., Komischke, H., &
+Ludwig, R. (2017, April). SDCLIREF-A sub-daily gridded reference dataset.
+In EGU General Assembly Conference Abstracts (p. 15739).
+}
 \keyword{datasets}

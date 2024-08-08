@@ -41,14 +41,14 @@ calc_mci <- function(model, model_correction, time_p = NA, p = 2,
   # Checks arguments
   assert_set_equal(dim(model), dim(model_correction), ordered = TRUE)
   assert_set_equal(colnames(model), colnames(model_correction), ordered = TRUE)
-  if(!is.na(time_p)) {
-    assert_date(time_p, len = nrow(model), any.missing = FALSE)
+  if(!anyNA(time_p)) {
+    assert_vector(time_p, len = nrow(model), any.missing = FALSE)
   } else time_p <- 1:nrow(model)
   pcop_model = calculate_pcop(model, margins_controls, ...)
   pcop_correction = calculate_pcop(model_correction, margins_controls, ...)
-  probs = data.table("nep_model" = pcop_model,
-                     "nep_correction" = pcop_correction, time = time_p)
-  probs[, "mci" := nep_model - nep_correction]
+  probs = data.table(pcop_model, pcop_correction, time_p)
+  colnames(probs) = c("nep_model", "nep_correction", "time")
+  probs[, "mci" := get("nep_model") - get("nep_correction")]
   attr(probs, "global_mci") = mean(abs(probs$mci)^p)^1/p
   attr(probs, "kde_model") = attr(pcop_model, "kde")
   attr(probs, "kde_correction") = attr(pcop_correction, "kde")
@@ -59,23 +59,14 @@ calc_mci <- function(model, model_correction, time_p = NA, p = 2,
 
 #' @title Calculate Non-Exceedance Probability
 #'
-#' @inheritParams vine_correct
-#' @param data [data.frame]\cr
-#' Data to calculate the non-exceedance probability.
+#' @inheritParams model_vine
+#' 
 #' @return A data frame with the non-exceedance probability for the events.
 calculate_pcop <- function(data, margins_controls, ...) {
-  u_data = calculate_margins(data, margins_controls)
-  if (any(margins_controls$type == "zi")) {
-    vec = which(rep(margins_controls$type, times = 2) == "zi")
-    u_data[, -vec] = pseudo_obs(u_data[, -vec], ties_method = 'random')
-  } else {
-    u_data = pseudo_obs(u_data, ties_method = 'random')
-  }
-  var_types = ifelse(margins_controls$type == "zi", "d", "c")
-  vine_model <- vinecop(u_data, var_types = var_types, ...)
-  z = pvinecop(u_data, vine_model)
+  u_data = model_vine(data, margins_controls, ...)
+  z = pvinecop(u_data, attr(u_data, "vine"))
   attr(z, "kde") = attr(u_data, "kde")
-  attr(z, "vine") = vine_model
+  attr(z, "vine") = attr(u_data, "vine")
   z
 }
 

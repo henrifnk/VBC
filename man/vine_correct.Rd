@@ -9,36 +9,24 @@ vine_correct(
   mc,
   mp,
   var_names = colnames(oc),
-  zero_inf = rep(FALSE, times = ncol(oc)),
-  margins_controls = list(mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2),
-  digits = NA,
-  oc_struc = FALSE,
-  return_mch = FALSE,
+  margins_controls = list(mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type =
+    "c"),
   ...
 )
 }
 \arguments{
-\item{oc}{\link{data.frame}\cr
+\item{oc}{\link{data.table}\cr
 Measured (and interpolated) observations during calibration period.}
 
-\item{mc}{\link{data.frame}\cr
+\item{mc}{\link{data.table}\cr
 Simulation data from a climate model during calibration period.}
 
-\item{mp}{\link{data.frame}\cr
+\item{mp}{\link{data.table}\cr
 Simulation data from a climate model during projection period.}
 
 \item{var_names}{\link{character}\cr
 Names of corrected climate data. Defaults to the column names of the
 observed data \code{oc}.}
-
-\item{zero_inf}{\link{double}\cr
-A vector of the length of climate variables to correct. The n-th element in
-the vector indicates if the n-th climate variable is zero inflated.
-\itemize{
-\item \code{TRUE} indicates a zero inflated climate variable
-\item \code{FALSE} indicates a non-zero inflated climate variable
-Defaults to \code{FALSE} for all climate variables.
-}}
 
 \item{margins_controls}{\link{list}\cr
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
@@ -50,19 +38,11 @@ kernel density estimation are multiplied with \code{mult}. Defaults to
 \item \code{xmax} numeric vector of length d; see \code{\link[kde1d:kde1d]{kde1d::kde1d()}}.
 \item \code{bw} numeric vector of length d; see \code{\link[kde1d:kde1d]{kde1d::kde1d()}}.
 \item \code{deg} numeric vector of length one or d; \code{\link[kde1d:kde1d]{kde1d::kde1d()}}.
+\item \code{type} character vector of length one or d; must be one of
+c, cont, continuous for continuous variables, one of d, disc, discrete for
+discrete integer variables, or one of zi, zinfl, zero-inflated for
+zero-inflated variables.
 }}
-
-\item{digits}{\code{integer(1)}\cr
-The corrected data will be rounded to the specified digit length after
-correction. Defaults to \code{NA} where no rounding is performed.}
-
-\item{oc_struc}{\code{logical(1)}\cr
-If true, the vine structure of the measured data \code{oc} is used for the
-vine structure of the projection period data. Defaults to \code{FALSE}.}
-
-\item{return_mch}{\code{logical(1)}\cr
-If true, the function returns the corrected model data from the projection
-period before delta mapping. Defaults to \code{FALSE}.}
 
 \item{...}{\cr
 Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
@@ -70,7 +50,7 @@ vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }
 \value{
-\link{data.frame}\cr
+\link{data.table}\cr
 The corrected projection period data in \code{mp}. Additionally the data frame
 contains the attributes
 \itemize{
@@ -88,44 +68,20 @@ univariate bias correction via quantile delta mapping.
 }
 \examples{
 #' \dontrun{
-#' library(MBC)
 #' data("climate")
 #' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew")])
-#' margins_controls = list(xmin = c(0, NaN, NaN))
-#' zero_inf = c(TRUE, FALSE, FALSE)
+#' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
 #' mp_vbc = vine_correct(climate_sub$oc, climate_sub$mc, climate_sub$mp,
 #'                       margins_controls = margins_controls,
-#'                       zero_inf = zero_inf, family_set = "tll",
-#'                       trunc_lvl = Inf)
+#'                       family_set = "tll", trunc_lvl = Inf)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))
-#' mp_ubc = mapply(QDM, o.c = climate_sub$oc, m.c = climate_sub$mc,
-#'                 m.p = climate_sub$mp, ratio = c(TRUE, FALSE, FALSE),
-#'                 trace = c(0.01, Inf, Inf), SIMPLIFY = FALSE)
-#' mp_ubc = do.call(cbind.data.frame, lapply(mp_ubc, function(var) var$mhat.p))
-#' mp_mbcn = data.frame(MBCn(o.c = climate_sub$oc, m.c = climate_sub$mc,
-#'                           m.p = climate_sub$mp, ratio.seq = c(TRUE, FALSE, FALSE),
-#'                           trace = c(0.01, Inf, Inf), silent = TRUE)$mhat.p)
-#' colnames(mp_mbcn) = colnames(mp_vbc)
-#' c(
-#'   "ubc" = attr(calc_mci(climate_sub$mp, mp_ubc,
-#'                         margins_controls = margins_controls,
-#'                         zero_inf = zero_inf, family_set = "tll",
-#'                         trunc_lvl = Inf), "global"),
-#'   "vbc" = attr(calc_mci(climate_sub$mp, mp_vbc,
-#'                         margins_controls = margins_controls,
-#'                         zero_inf = zero_inf, family_set = "tll",
-#'                         trunc_lvl = Inf), "global"),
-#'   "mbcn" = attr(calc_mci(climate_sub$mp, mp_mbcn,
-#'                          margins_controls = margins_controls,
-#'                          zero_inf = zero_inf, family_set = "tll",
-#'                          trunc_lvl = Inf), "global")
-#' )
-#'
-#' list(
-#'   "ubc" = calc_wasserstein(climate_sub$oc, mp_ubc),
-#'   "vbc" = calc_wasserstein(climate_sub$oc, mp_vbc),
-#'   "mbcn" = calc_wasserstein(climate_sub$oc, mp_mbcn)
+#' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
+#'          margins_controls = margins_controls,
+#'          family_set = "tll", trunc_lvl = Inf)
+#' rbind(
+#'  uncorrected = calc_wasserstein(climate_sub$oc, climate_sub$mp),
+#'  corrected = calc_wasserstein(climate_sub$oc, mp_vbc),
 #' )
 #' }
 }
