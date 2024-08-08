@@ -13,7 +13,7 @@ vbc_tsub(
     "c"),
   t_subs = list(list(hours = seq(0, 21, by = 3), month = 1:12)),
   overlap = 1,
-  cores = NA,
+  cores_t = NA,
   ...
 )
 }
@@ -59,9 +59,9 @@ hour and monthly information to subset the data.}
 \item{overlap}{\link{integer}\cr
 The number of times to overlap the temporal indicators.}
 
-\item{cores}{\link{integer}\cr
-The number of cores to use for parallel processing.
-Default is \code{NA} which means no parallel processing.}
+\item{cores_t}{\link{integer}\cr
+The number of cores to use for parallel processing of the temporal
+subsetting. Default is \code{NA} which means no parallel processing.}
 
 \item{...}{\cr
 Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
@@ -78,6 +78,30 @@ data. The time column is attached to the data.
 }
 \description{
 Combine VBC and the Method of fragments
+}
+\examples{
+#' \dontrun{
+#' data("climate")
+#' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew", "time")])
+#' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
+#' t_subs = list(day = list(hours = c(6, 9, 12, 15), month = 1:12),
+#'               night = list(hours = c(18, 21, 0, 3), month = 1:12))
+#' mp_vbc = vbc_tsub(climate_sub$oc, climate_sub$mc, climate_sub$mp,
+#'                   t_subs = t_subs, margins_controls = margins_controls,
+#'                   family_set = "tll", trunc_lvl = Inf)
+#' class(mp_vbc)
+#' attr(mp_vbc, "mvd")
+#' 
+#' calc_mci(climate_sub$mp[, -"time"], mp_vbc[, -"time"],
+#'          time = climate$mp$time, margins_controls = margins_controls,
+#'          family_set = "tll", trunc_lvl = Inf)
+#' rbind(
+#'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, -"time"],
+#'                                 climate_sub$mp[1:5000, -"time"]),
+#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, -"time"],
+#'                               mp_vbc[1:5000, -"time"])
+#' )
+#' }
 }
 \references{
 Sharma, A.; Srikanthan, S. (2006): Continuous Rainfall Simulation:

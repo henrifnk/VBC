@@ -23,9 +23,9 @@
 #' @param overlap [integer]\cr
 #' The number of times to overlap the temporal indicators.
 #' 
-#' @param cores [integer]\cr
-#' The number of cores to use for parallel processing.
-#' Default is `NA` which means no parallel processing.
+#' @param cores_t [integer]\cr
+#' The number of cores to use for parallel processing of the temporal 
+#' subsetting. Default is `NA` which means no parallel processing.
 #' 
 #' @importFrom parallel mclapply
 #' @importFrom lubridate as.duration
@@ -46,6 +46,8 @@
 #'  vine copula and kernel density estimation objects of the observed and model
 #'  data. The time column is attached to the data. 
 #' 
+#' @example R/example.R
+#' 
 #' @export
 vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
                     margins_controls = list(
@@ -53,8 +55,8 @@ vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
                       type = "c"),
                     t_subs = list(
                       list(hours = seq(0, 21, by = 3), month = 1:12)
-                      ), overlap = 1, cores = NA, ...) {
-  if(is.na(cores)) {
+                      ), overlap = 1, cores_t = NA, ...) {
+  if(is.na(cores_t)) {
     tmp_mph <- lapply(t_subs, function(t_sub) {
       oc_sub <- subset_time(oc, t_sub$hours, t_sub$month, overlap)
       mc_sub <- subset_time(mc, t_sub$hours, t_sub$month, overlap)
@@ -79,7 +81,7 @@ vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
                  ...)
       mph[, "idx" := idx]
       mph[idx %in% final_idx, ]
-    }, mc.cores = cores)
+    }, mc.cores = cores_t)
   }
   mph <- rbindlist(tmp_mph)[order(rank(get("idx")))]
   attribs <- lapply(tmp_mph, function(x) {

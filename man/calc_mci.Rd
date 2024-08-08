@@ -77,14 +77,16 @@ method preserves the model-specific rank structure.
 #'                   t_subs = t_subs, margins_controls = margins_controls,
 #'                   family_set = "tll", trunc_lvl = Inf)
 #' class(mp_vbc)
-#' summary(attr(mp_vbc, "vine_oc"))
-#' summary(attr(mp_vbc, "vine_mp"))
-#' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
-#'          margins_controls = margins_controls,
+#' attr(mp_vbc, "mvd")
+#' 
+#' calc_mci(climate_sub$mp[, -"time"], mp_vbc[, -"time"],
+#'          time = climate$mp$time, margins_controls = margins_controls,
 #'          family_set = "tll", trunc_lvl = Inf)
 #' rbind(
-#'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, ], climate_sub$mp[1:5000,]),
-#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ])
+#'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, -"time"],
+#'                                 climate_sub$mp[1:5000, -"time"]),
+#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, -"time"],
+#'                               mp_vbc[1:5000, -"time"])
 #' )
 #' }
 }
