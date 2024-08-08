@@ -11,6 +11,7 @@ vbc(
   var_names = colnames(oc),
   margins_controls = list(mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type =
     "c"),
+  time_mp = NA,
   ...
 )
 }
@@ -44,6 +45,10 @@ discrete integer variables, or one of zi, zinfl, zero-inflated for
 zero-inflated variables.
 }}
 
+\item{time_mp}{\link{numeric}\cr
+Time vector of the projection period attached to the returned object as a
+column. Defaults to \code{NA}, which means no time vector is attached.}
+
 \item{...}{\cr
 Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
 vines and margins. Note that the ellipsis of observed and model data are
@@ -52,11 +57,9 @@ specified with the same arguments.}
 \value{
 \link{data.table}\cr
 The corrected projection period data in \code{mp}. Additionally the data frame
-contains the attributes
-\itemize{
-\item \code{vine_oc} the vine copula for the measured data \code{oc}.
-\item \code{vine_mp} the vine copula for the model data from projection period \code{mp}.
-}
+contains the attributes \code{vine_oc}, \code{kde_oc}, \code{vine_mp}, and \code{kde_mp} which
+store the vine copula and kernel density estimation objects of the observed
+and model data.
 }
 \description{
 The multivariate distribution functions of model and observed are estimated
@@ -71,11 +74,14 @@ univariate bias correction via quantile delta mapping.
 }
 \examples{
 #' \dontrun{
-#' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew")])
+#' data("climate")
+#' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew", "time")])
 #' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
-#' mp_vbc = vbc(climate_sub$oc, climate_sub$mc, climate_sub$mp,
-#'              margins_controls = margins_controls, family_set = "tll",
-#'              trunc_lvl = Inf)
+#' t_subs = list(day = list(hours = c(6, 9, 12, 15), month = 1:12),
+#'               night = list(hours = c(18, 21, 0, 3), month = 1:12))
+#' mp_vbc = vbc_tsub(climate_sub$oc, climate_sub$mc, climate_sub$mp,
+#'                   t_subs = t_subs, margins_controls = margins_controls,
+#'                   family_set = "tll", trunc_lvl = Inf)
 #' class(mp_vbc)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))

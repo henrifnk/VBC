@@ -39,6 +39,10 @@
 #'   discrete integer variables, or one of zi, zinfl, zero-inflated for
 #'   zero-inflated variables.
 #'
+#' @param time_mp [numeric]\cr
+#' Time vector of the projection period attached to the returned object as a 
+#' column. Defaults to `NA`, which means no time vector is attached.
+#'
 #' @param ... \cr
 #'  Arguments are passed to [rvinecopulib::vinecop] to specify the structure of
 #'  vines and margins. Note that the ellipsis of observed and model data are
@@ -46,10 +50,9 @@
 #'
 #' @return [data.table]\cr
 #'  The corrected projection period data in `mp`. Additionally the data frame
-#'  contains the attributes
-#'
-#'  - `vine_oc` the vine copula for the measured data `oc`.
-#'  - `vine_mp` the vine copula for the model data from projection period `mp`.
+#'  contains the attributes `vine_oc`, `kde_oc`, `vine_mp`, and `kde_mp` which
+#'  store the vine copula and kernel density estimation objects of the observed
+#'  and model data.
 #'
 #' @example R/example.R
 #'
@@ -71,7 +74,7 @@
 #' @export
 vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
   mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type = "c"
-), ...) {
+), time_mp = NA, ...) {
   check_vbc_args(oc, mc, mp, var_names)
   mc_kde <- attr(estimate_margins(mc, margins_controls), "kde")
   mpu <- model_vine(mp, margins_controls, ...)
@@ -93,6 +96,9 @@ vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
   attr(xproj, "vine_mp") <- attr(mpu, "vine")
   attr(xproj, "kde_mp") <- attr(mpu, "kde")
   class(xproj) <- c("vbc", class(xproj))
+  if(!is.na(time_mp)) {
+    xproj[, "time" := time_mp]
+  }
   xproj
 }
 

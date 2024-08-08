@@ -19,8 +19,10 @@ Imports:
   checkmate,
   data.table,
   kde1d,
+  lubridate,
+  parallel,
   rvinecopulib,
-  transport,
+  transport
 Suggests: 
     testthat (>= 3.0.0),
     spelling,

@@ -1,0 +1,138 @@
+#' Combine VBC and the Method of fragments
+#' 
+#' @param oc [data.table]\cr
+#'  Measured (and interpolated) observations during calibration period. 
+#'  Expects one column time in `lubridate`-readable format.
+#' 
+#' @param mc [data.table]\cr
+#'  Simulation data from a climate model during calibration period.
+#'  Expects one column time in `lubridate`-readable format.
+#'
+#' @param mp [data.table]\cr
+#'  Simulation data from a climate model during projection period.
+#'  Expects one column time in `lubridate`-readable format.
+#'  
+#' @inheritParams vbc
+#' 
+#' @param t_subs [list]\cr
+#' A list of two lists: hours and month. Each list contains the temporal
+#' indicators to subset the data. The first list contains the hours of the day
+#' the length of list marks the number of fragments. The inner list contains the
+#' hour and monthly information to subset the data.
+#' 
+#' @param overlap [integer]\cr
+#' The number of times to overlap the temporal indicators.
+#' 
+#' @param cores [integer]\cr
+#' The number of cores to use for parallel processing.
+#' Default is `NA` which means no parallel processing.
+#' 
+#' @importFrom parallel mclapply
+#' @importFrom lubridate as.duration
+#' 
+#' @references 
+#' Sharma, A.; Srikanthan, S. (2006): Continuous Rainfall Simulation: 
+#' A Nonparametric Alternative. In: 30th Hydrology and Water Resources
+#' Symposium 4-7 December 2006, Launceston, Tasmania.
+#' 
+#' Westra, S.; Mehrotra, R.; Sharma, A.; Srikanthan, R. (2012): Continuous
+#' rainfall simulation. 1. A regionalized subdaily disaggregation approach. 
+#' In: Water Resour. Res. 48 (1). DOI: 10.1029/2011WR010489.
+#' 
+#' @return [data.table]\cr
+#'  The corrected projection period data in `mp`. Additionally the data frame
+#'  contains the attribute `mvd` with one list per temporal subset. In each
+#'  subset `vine_oc`, `kde_oc`, `vine_mp`, and `kde_mp` which store the 
+#'  vine copula and kernel density estimation objects of the observed and model
+#'  data. The time column is attached to the data. 
+#' 
+#' @export
+vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
+                    margins_controls = list(
+                      mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2,
+                      type = "c"),
+                    t_subs = list(
+                      list(hours = seq(0, 21, by = 3), month = 1:12)
+                      ), overlap = 1, cores = NA, ...) {
+  if(is.na(cores)) {
+    tmp_mph <- lapply(t_subs, function(t_sub) {
+      oc_sub <- subset_time(oc, t_sub$hours, t_sub$month, overlap)
+      mc_sub <- subset_time(mc, t_sub$hours, t_sub$month, overlap)
+      mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
+      final_idx <- attr(mp_sub, "final_idx")
+      idx <- attr(mp_sub, "idx")
+      mph <- vbc(oc_sub, mc_sub, mp_sub, margins_controls =  margins_controls,
+                 ...)
+      mph[, "idx" := idx]
+      message("subset for ", t_sub$hours, " hours and ", t_sub$month,
+              " month done.")
+      mph[idx %in% final_idx, ]
+    })
+  } else {
+    tmp_mph <- mclapply(t_subs, function(t_sub) {
+      oc_sub <- subset_time(oc, t_sub$hours, t_sub$month, overlap)
+      mc_sub <- subset_time(mc, t_sub$hours, t_sub$month, overlap)
+      mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
+      final_idx <- attr(mp_sub, "final_idx")
+      idx <- attr(mp_sub, "idx")
+      mph <- vbc(oc_sub, mc_sub, mp_sub, margins_controls =  margins_controls,
+                 ...)
+      mph[, "idx" := idx]
+      mph[idx %in% final_idx, ]
+    }, mc.cores = cores)
+  }
+  mph <- rbindlist(tmp_mph)[order(rank(get("idx")))]
+  attribs <- lapply(tmp_mph, function(x) {
+    c("vine_oc", "kde_oc", "vine_mp", "kde_mp") %>% 
+      setNames(c("vine_oc", "kde_oc", "vine_mp", "kde_mp")) %>% 
+      lapply(function(y) attr(x, y))
+  })
+  mph[, "idx" := NULL][, "time" := mp[, "time", drop = TRUE]]
+  class(mph) <- c("vbc_tsub", class(mph))
+  attr(mph, "mvd") <- attribs
+  mph
+}
+
+# utilities --------------------------------------------------------------------
+#' @title subset time and final reading index
+#' 
+#' @inheritParams model_vine
+#' @inheritParams vbc_tsub
+#' 
+#' @param hrs [integer]\cr
+#' The hours of the day to be used for subsetting.
+#' 
+#' @param mnt [integer]\cr
+#' The months of the year to be used for subsetting.
+subset_time <- function(data, hrs, mnt, overlap = 1) {
+  time <- data$time
+  duration <- as.duration(difftime(time[2], time[1]))
+  resolution_hrs <- as.numeric(duration, "hours")
+  hrs_over <- calc_range(hrs, min = min(hour(time)), max = max(hour(time)),
+                         res = resolution_hrs, overlap)
+  mnt_over <- calc_range(mnt, min = 1, max = 12, res = 1, overlap)
+  idx <- which(hour(time) %in% hrs_over & month(time) %in% mnt_over)
+  final_idx <- which(hour(time) %in% hrs & month(time) %in% mnt)
+  data_sub <- data[idx, ]
+  data_sub$time <- NULL
+  attr(data_sub, "final_idx") <- final_idx
+  attr(data_sub, "idx") <- idx
+  data_sub
+}
+
+#' @title calculate temporal range recursively by overlap.
+#' @param v sorted vector of temporal indicators
+#' @param min cyclic minimum
+#' @param max cyclic maximum
+#' @param res resolution of time
+#' @inheritParams vbc_tsub
+#' @return a vector of temporal indicators
+calc_range = function(v, min, max, res, overlap = 1) {
+  if(overlap == 0) return(unique(v))
+  range <- c(v[1] - res, v, v[length(v)] + res)
+  range[1] <- ifelse(range[1] < min, max, range[1])
+  range[length(range)] <- ifelse(range[length(range)] > max,
+                                 min, range[length(range)])
+  calc_range(range, min, max, res, overlap = overlap - 1L)
+}
+
