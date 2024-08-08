@@ -4,7 +4,7 @@ Version: 0.0.2.0
 Authors@R: 
     person("Henri", "Funk", , "H.Funk@lmu.de", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0007-0949-8385"))
-Description: vineBC implements a method to correct the bias in simulated
+Description: VBC implements a method to correct the bias in simulated
   climate data with observed data while preserving the internal variability of
   the model. To evaluate the method and compare it with others, several post hoc 
   diagnostic measures are provided. The MCI is a measure to evaluate how well

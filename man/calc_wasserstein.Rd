@@ -43,6 +43,7 @@ distribution of the model data after the correction.
 #' mp_vbc = vbc(climate_sub$oc, climate_sub$mc, climate_sub$mp,
 #'              margins_controls = margins_controls, family_set = "tll",
 #'              trunc_lvl = Inf)
+#' class(mp_vbc)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))
 #' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
@@ -50,7 +51,7 @@ distribution of the model data after the correction.
 #'          family_set = "tll", trunc_lvl = Inf)
 #' rbind(
 #'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, ], climate_sub$mp[1:5000,]),
-#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ]),
+#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ])
 #' )
 #' }
 }

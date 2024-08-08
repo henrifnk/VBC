@@ -2,7 +2,7 @@
 % Please edit documentation in R/evaluation_measures.R
 \name{calc_mci}
 \alias{calc_mci}
-\title{Model Correction Inconcistency (MCI)}
+\title{Model Correction Inconsistency (MCI)}
 \usage{
 calc_mci(
   model,
@@ -62,8 +62,8 @@ placed in attributes in of the returned object.
 \description{
 MCI provides a score to quantify how invasive the correction method
 transformed the multivariate temporal rank structure of the model after
-correcting the model bias. Therefore, this model compares non-excedance
-probabilities of an event t before and after bias correction. A noninvaseive
+correcting the model bias. Therefore, this model compares non-exceedance
+probabilities of an event t before and after bias correction. A non-invasive
 method preserves the model-specific rank structure.
 }
 \examples{
@@ -73,6 +73,7 @@ method preserves the model-specific rank structure.
 #' mp_vbc = vbc(climate_sub$oc, climate_sub$mc, climate_sub$mp,
 #'              margins_controls = margins_controls, family_set = "tll",
 #'              trunc_lvl = Inf)
+#' class(mp_vbc)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))
 #' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
@@ -80,7 +81,7 @@ method preserves the model-specific rank structure.
 #'          family_set = "tll", trunc_lvl = Inf)
 #' rbind(
 #'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, ], climate_sub$mp[1:5000,]),
-#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ]),
+#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ])
 #' )
 #' }
 }

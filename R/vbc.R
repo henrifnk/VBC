@@ -73,7 +73,7 @@ vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
   mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type = "c"
 ), ...) {
   check_vbc_args(oc, mc, mp, var_names)
-  mc_kde <- attr(calculate_margins(mc, margins_controls), "kde")
+  mc_kde <- attr(estimate_margins(mc, margins_controls), "kde")
   mpu <- model_vine(mp, margins_controls, ...)
   ocu <- model_vine(oc, margins_controls, ...)
   attr(ocu, "vine")$var_types = rep("c", times = ncol(mp))

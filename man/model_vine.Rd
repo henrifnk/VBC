@@ -32,7 +32,7 @@ vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }
 \value{
-The PIT-transformed margins from \code{\link[=calculate_margins]{calculate_margins()}}. Additionally
+The PIT-transformed margins from \code{\link[=estimate_margins]{estimate_margins()}}. Additionally
 the data frame contains the attribute \code{vine} with the vine copula model and
 the attribute \code{kde} with the kernel density estimation of the data.
 }

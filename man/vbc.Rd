@@ -61,6 +61,9 @@ contains the attributes
 \description{
 The multivariate distribution functions of model and observed are estimated
 via vine copula estimation (see \link[rvinecopulib:vine]{rvinecopulib::vine}).
+This method provides the tool to model the multivariate distribution function
+of the climate data by Vine Copulas. The climate variables may be zero
+inflated.
 The quantiles are then mapped via (inverse) Rosenblatt transformation from
 the model to the observed distribution. The corrected data are mapped to the
 projection domain via delta mapping. The steps are equivalent to those in
@@ -73,6 +76,7 @@ univariate bias correction via quantile delta mapping.
 #' mp_vbc = vbc(climate_sub$oc, climate_sub$mc, climate_sub$mp,
 #'              margins_controls = margins_controls, family_set = "tll",
 #'              trunc_lvl = Inf)
+#' class(mp_vbc)
 #' summary(attr(mp_vbc, "vine_oc"))
 #' summary(attr(mp_vbc, "vine_mp"))
 #' calc_mci(climate_sub$mp, mp_vbc, time = climate$mp$time,
@@ -80,7 +84,7 @@ univariate bias correction via quantile delta mapping.
 #'          family_set = "tll", trunc_lvl = Inf)
 #' rbind(
 #'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, ], climate_sub$mp[1:5000,]),
-#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ]),
+#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, ], mp_vbc[1:5000, ])
 #' )
 #' }
 }

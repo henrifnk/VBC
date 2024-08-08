@@ -49,7 +49,7 @@ northeastern North America with the Canadian Regional Climate Model (CRCM5).
 Journal of Applied Meteorology and Climatology, 58(4), 663-693.
 
 Wood, R. R., Willkofer, F., Schmid, F. J., Trentini, F., Komischke, H., &
-Ludwig, R. (2017, April). SDCLIREF-A sub-daily gridded reference dataset.
+Ludwig, R. (2017, April). SDCLIREF-A sub-daily reference dataset.
 In EGU General Assembly Conference Abstracts (p. 15739).
 }
 \keyword{datasets}

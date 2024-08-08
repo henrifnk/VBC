@@ -1,10 +1,10 @@
-#' @title Model Correction Inconcistency (MCI)
+#' @title Model Correction Inconsistency (MCI)
 #'
 #' @description
 #' MCI provides a score to quantify how invasive the correction method
 #' transformed the multivariate temporal rank structure of the model after
-#' correcting the model bias. Therefore, this model compares non-excedance
-#' probabilities of an event t before and after bias correction. A noninvaseive
+#' correcting the model bias. Therefore, this model compares non-exceedance
+#' probabilities of an event t before and after bias correction. A non-invasive
 #' method preserves the model-specific rank structure.
 #'
 #' @param model [data.frame]\cr
@@ -38,14 +38,13 @@ calc_mci <- function(model, model_correction, time_p = NA, p = 2,
                      margins_controls = list(mult = NULL, xmin = NaN,
                                              xmax = NaN, bw = NA, deg = 2,
                                              type = "c"), ...) {
-  # Checks arguments
   assert_set_equal(dim(model), dim(model_correction), ordered = TRUE)
   assert_set_equal(colnames(model), colnames(model_correction), ordered = TRUE)
   if(!anyNA(time_p)) {
     assert_vector(time_p, len = nrow(model), any.missing = FALSE)
   } else time_p <- 1:nrow(model)
-  pcop_model = calculate_pcop(model, margins_controls, ...)
-  pcop_correction = calculate_pcop(model_correction, margins_controls, ...)
+  pcop_model = calc_pcop(model, margins_controls, ...)
+  pcop_correction = calc_pcop(model_correction, margins_controls, ...)
   probs = data.table(pcop_model, pcop_correction, time_p)
   colnames(probs) = c("nep_model", "nep_correction", "time")
   probs[, "mci" := get("nep_model") - get("nep_correction")]
@@ -62,7 +61,7 @@ calc_mci <- function(model, model_correction, time_p = NA, p = 2,
 #' @inheritParams model_vine
 #' 
 #' @return A data frame with the non-exceedance probability for the events.
-calculate_pcop <- function(data, margins_controls, ...) {
+calc_pcop <- function(data, margins_controls, ...) {
   u_data = model_vine(data, margins_controls, ...)
   z = pvinecop(u_data, attr(u_data, "vine"))
   attr(z, "kde") = attr(u_data, "kde")
@@ -113,8 +112,6 @@ calc_wasserstein <- function(observed, model, n = nrow(observed),
   pp_o <- pp(observed[sample(nrow(observed), samle_n),])
   pp_m <- pp(model[sample(nrow(model), samle_n),])
   tplan_mo <- transport.pp(pp_o, pp_m, ...)
-  c(
-    "Wasserstein_1" = wasserstein(pp_o, pp_m, p = 1, tplan = tplan_mo),
-    "Wasserstein_2" = wasserstein(pp_o, pp_m, p = 2, tplan = tplan_mo)
-  )
+  c("Wasserstein_1" = wasserstein(pp_o, pp_m, p = 1, tplan = tplan_mo),
+    "Wasserstein_2" = wasserstein(pp_o, pp_m, p = 2, tplan = tplan_mo))
 }

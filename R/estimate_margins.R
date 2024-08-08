@@ -1,5 +1,5 @@
 # utils ------------------------------------------------------------------------
-#' Calculate Margins
+#' Estimate Margins
 #'
 #' @inheritParams vbc
 #' @param dta [data.table]\cr
@@ -8,7 +8,7 @@
 #' kernel density estimations.
 #'
 #' @return A data frame with the marginal PIT.
-calculate_margins = function(dta, margins_controls, kde = NULL) {
+estimate_margins = function(dta, margins_controls, kde = NULL) {
   if (is.null(kde)) {
     margins_controls <- expand_margin_controls(margins_controls, dta)
     kde <- mapply(kde1d, x = dta, mult = margins_controls$mult,
@@ -34,7 +34,7 @@ calculate_margins = function(dta, margins_controls, kde = NULL) {
 
 #' Expand margins
 #'
-#' @inheritParams calculate_margins
+#' @inheritParams estimate_margins
 #' @param controls margins_controls
 #' @importFrom utils modifyList
 #' @return Expanded margins.
