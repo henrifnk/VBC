@@ -1,24 +1,47 @@
 ---
-title: "Bias Correction and Evaluation of results"
+title: "Bias Correction and Evaluation of results for Iller Kempten"
 author: "Henri Funk"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Bias Correction and Evaluation of results}
+%\VignetteIndexEntry{Bias Correction and Evaluation of results}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r setup, include = FALSE}
 rm(list = ls())
 knitr::opts_chunk$set(
-  collapse = FALSE,
-  comment = "#>"
+collapse = FALSE,
+comment = "#>"
 )
 devtools::load_all()
+# library(VBC)
 ```
 
+```{r library_n_data}
+load("/home/henri_funk/Schreibtisch/PEG-Iller-Kempten_14_12.rda")
+```
 
+```{r nighttimesDJF}
+members <- mp_dts$member
+members = members[members %in% c("kba", "kbb")]
+mp_dts = mp_dts[member %in% c("kba", "kbb"), ][, member := NULL]
+mc_dts = mc_dts[member %in% c("kba", "kbb"), ][, member := NULL]
+split_mp <- split(mp_dts, members)
+
+margins_controls = list(xmin = c(NaN, 0, NaN, 0, 0),
+                        type = c("c", "zi", "c", "zi", "c"))
+winter = list(nightDJF = list(hours = c(21, 0, 3, 6), month = c(12, 1, 2)),
+              dayDJF = list(hours = c(9, 12, 15, 18), month = c(12, 1, 2)))
+
+debugonce(vbc_tsub)
+vbc = vbc_tsub(mp = split_mp, mc = mc_dts, rc = oc_dt, t_subs = winter,
+               margins_controls = margins_controls, family_set = "tll",
+               trunc_lvl = Inf)
+vbc
+
+```
 
 
 

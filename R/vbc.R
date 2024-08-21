@@ -129,7 +129,6 @@ check_vbc_args <- function(mp, mc, rc, var_names) {
   assert_data_frame(rc, types = "numeric", any.missing = FALSE,
                     ncols = ncol(mp))
   assert_set_equal(apply(rc, 2, class), apply(mc, 2, class), ordered = TRUE)
-  assert_set_equal(apply(mc, 2, class), apply(mp, 2, class), ordered = TRUE)
   assert_character(var_names, any.missing = FALSE, unique = TRUE,
                    len = ncol(mp))
 }
@@ -144,7 +143,7 @@ check_vbc_args <- function(mp, mc, rc, var_names) {
 vbc_ensemble <- function(mp, mc, rc, var_names, margins_controls, time_mp, ...) {
   mc_kde <- attr(estimate_margins(mc, margins_controls), "kde")
   rcu <- model_vine(rc, margins_controls, ...)
-  attr(rcu, "vine")$var_types = rep("c", times = ncol(mp))
+  attr(rcu, "vine")$var_types = rep("c", times = ncol(rc))
   lapply(mp, function(member){
     mpu <- model_vine(member, margins_controls, ...)
     x_mph <- correct_rosenblatt(mpu, rcu, any(margins_controls$type == "zi"))
@@ -166,6 +165,7 @@ vbc_ensemble <- function(mp, mc, rc, var_names, margins_controls, time_mp, ...) 
     if(!is.na(time_mp)) {
       xproj[, "time" := time_mp]
     }
+    message("An ensemble member is done.")
     xproj
   })  
 }

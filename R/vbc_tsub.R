@@ -60,7 +60,7 @@ vbc_tsub = function(mp, mc, rc, var_names = colnames(rc),
                       type = "c"),
                     t_subs = list(
                       list(hours = 0:23, month = 1:12)
-                      ), overlap = 1, cores_t = NA, verbose = TRUE, ...) {
+                    ), overlap = 1, cores_t = NA, verbose = TRUE, ...) {
   if(is.na(cores_t)) {
     tmp_mph <- lapply(t_subs, function(t_sub) {
       rc_sub <- subset_time(rc, t_sub$hours, t_sub$month, overlap)
@@ -71,17 +71,26 @@ vbc_tsub = function(mp, mc, rc, var_names = colnames(rc),
         mp_sub <- lapply(mp, subset_time,  hrs = t_sub$hours, mnt = t_sub$month,
                          overlap = overlap)
       }
-      mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
-      final_idx <- attr(mp_sub, "final_idx")
-      idx <- attr(mp_sub, "idx")
       mph <- vbc(mp_sub, mc_sub, rc_sub, margins_controls =  margins_controls,
                  ...)
-      mph[, "idx" := idx]
       if(verbose) {
         message("subset for ", t_sub$hours, " hours and ", t_sub$month,
                 " month done.")
       }
-      mph[idx %in% final_idx, ]
+      if(is.data.frame(mp)) {
+        final_idx <- attr(mp_sub, "final_idx")
+        idx <- attr(mp_sub, "idx")
+        mph[, "idx" := idx]
+        mph[idx %in% final_idx, ]
+      } else {
+        mph <- mapply(function(mem_mph, mem_mp) {
+          final_idx <- attr(mem_mp, "final_idx")
+          idx <- attr(mem_mp, "idx")
+          mem_mph[, "idx" := idx]
+          mem_mph[idx %in% final_idx, ]
+        }, mem_mph = mph, mem_mp = mp_sub, SIMPLIFY = FALSE)
+        mph
+      }
     })
   } else {
     tmp_mph <- mclapply(t_subs, function(t_sub) {
@@ -97,19 +106,51 @@ vbc_tsub = function(mp, mc, rc, var_names = colnames(rc),
       idx <- attr(mp_sub, "idx")
       mph <- vbc(rc_sub, mc_sub, mp_sub, margins_controls =  margins_controls,
                  ...)
-      mph[, "idx" := idx]
-      mph[idx %in% final_idx, ]
+      if(verbose) {
+        message("subset for ", t_sub$hours, " hours and ", t_sub$month,
+                " month done.")
+      }
+      if(is.data.frame(mp)) {
+        mph[, "idx" := idx]
+        mph[idx %in% final_idx, ]
+      } else {
+        mph <- lapply(mph, function(x) {
+          x[, "idx" := idx]
+          x[idx %in% final_idx, ]
+        })
+        mph
+      }
     }, mc.cores = cores_t)
   }
-  mph <- rbindlist(tmp_mph)[order(rank(get("idx")))]
-  attribs <- lapply(tmp_mph, function(x) {
-    names <- c("vine_rc", "kde_rc", "vine_mp", "kde_mp")
-    names_list <- setNames(names, names)
-    lapply(names_list, function(y) attr(x, y))
-  })
-  mph[, "idx" := NULL][, "time" := mp[, "time", drop = TRUE]]
-  class(mph) <- c("vbc_tsub", class(mph))
-  attr(mph, "mvd") <- attribs
+  if(is.data.frame(mp)) {
+    mph <- rbindlist(tmp_mph)[order(rank(get("idx")))]
+    attribs <- lapply(tmp_mph, function(x) {
+      names <- c("vine_rc", "kde_rc", "vine_mp", "kde_mp")
+      names_list <- setNames(names, names)
+      lapply(names_list, function(y) attr(x, y))
+    })
+    time_mem = mp[["time"]][mph[["idx"]]]
+    mph[, "idx" := NULL][, "time" := time_mem]
+    class(mph) <- c("vbc_tsub", class(mph))
+    attr(mph, "mvd") <- attribs
+  } else {
+    mem_names <- names(tmp_mph[[1]])
+    tmp_mph <- invert_list(tmp_mph)
+    names(tmp_mph) <- mem_names
+    mph <- mapply(function(tmp_mem, mp_mem) {
+      mph <- rbindlist(tmp_mem)[order(rank(get("idx")))]
+      attribs <- lapply(tmp_mem, function(x) {
+        names <- c("vine_rc", "kde_rc", "vine_mp", "kde_mp")
+        names_list <- setNames(names, names)
+        lapply(names_list, function(y) attr(x, y))
+      })
+      time_mem = mp_mem[["time"]][mph[["idx"]]]
+      mph[, "idx" := NULL][, "time" := time_mem]
+      class(mph) <- c("vbc_tsub", class(mph))
+      attr(mph, "mvd") <- attribs
+      mph
+    }, tmp_mem = tmp_mph, mp_mem = mp, SIMPLIFY = FALSE)
+  }
   mph
 }
 
@@ -156,3 +197,18 @@ calc_range = function(v, min, max, res, overlap = 1) {
   calc_range(range, min, max, res, overlap = overlap - 1L)
 }
 
+#' @title Invert a list
+#' 
+#' @param list [list]\cr
+#' A list of detph 2. The first depth indicates the temporal subset and the
+#' second depth the members of the model ensemble.
+#' 
+#' @return [list]\cr
+#' A list of depth 2. The first depth indicates the members of the model
+#' ensemble and the second depth the temporal subset.
+#'
+invert_list = function(list) {
+  lapply(seq_along(list[[1]]), function(i) {
+    lapply(list, function(x) x[[i]])
+  })
+}
