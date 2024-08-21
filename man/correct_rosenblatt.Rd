@@ -4,13 +4,13 @@
 \alias{correct_rosenblatt}
 \title{Correct data by Rosenblatt transformation}
 \usage{
-correct_rosenblatt(mpu, ocu, z_inf = FALSE)
+correct_rosenblatt(mpu, rcu, z_inf = FALSE)
 }
 \arguments{
 \item{mpu}{\link{data.table}\cr
 Model data from \code{\link[=vbc]{vbc()}}.}
 
-\item{ocu}{\link{data.table}\cr
+\item{rcu}{\link{data.table}\cr
 Observed data from \code{\link[=vbc]{vbc()}}.}
 
 \item{z_inf}{\code{logical(1)}\cr

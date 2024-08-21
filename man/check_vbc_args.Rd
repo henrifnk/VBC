@@ -4,21 +4,23 @@
 \alias{check_vbc_args}
 \title{Check arguments for vine correction}
 \usage{
-check_vbc_args(oc, mc, mp, var_names)
+check_vbc_args(mp, mc, rc, var_names)
 }
 \arguments{
-\item{oc}{\link{data.table}\cr
-Measured (and interpolated) observations during calibration period.}
+\item{mp}{\link{data.table} OR \link{list}\cr
+Simulation data from a climate model during projection period. If this is a
+list, the algorithm expects each element to be a member of a model ensemble.
+Each list element is then a data table.}
 
 \item{mc}{\link{data.table}\cr
 Simulation data from a climate model during calibration period.}
 
-\item{mp}{\link{data.table}\cr
-Simulation data from a climate model during projection period.}
+\item{rc}{\link{data.table}\cr
+Historical reference in calibration period.}
 
 \item{var_names}{\link{character}\cr
 Names of corrected climate data. Defaults to the column names of the
-observed data \code{oc}.}
+observed data \code{rc}.}
 }
 \description{
 Check arguments for vine correction

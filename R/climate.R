@@ -37,9 +37,9 @@
 #'
 #' @format A list with four elements
 #' \describe{
-#'   \item{oc}{Measured observations during calibration period.}
-#'   \item{op}{Measured observations during projection period.}
-#'   \item{mc}{Simulation data from the model during calibration period.}
 #'   \item{mp}{Simulation data from the model during projection period.}
+#'   \item{mc}{Simulation data from the model during calibration period.}
+#'   \item{rp}{Measured observations during projection period.}
+#'   \item{rc}{Measured observations during calibration period.}
 #' }
 "climate"

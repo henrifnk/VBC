@@ -12,18 +12,20 @@
 #' projection domain via delta mapping. The steps are equivalent to those in
 #' univariate bias correction via quantile delta mapping.
 #'
-#' @param oc [data.table]\cr
-#'  Measured (and interpolated) observations during calibration period.
+#' @param mp [data.table] OR [list]\cr
+#'  Simulation data from a climate model during projection period. If this is a
+#'  list, the algorithm expects each element to be a member of a model ensemble.
+#'  Each list element is then a data table.
 #'
 #' @param mc [data.table]\cr
 #'  Simulation data from a climate model during calibration period.
 #'
-#' @param mp [data.table]\cr
-#'  Simulation data from a climate model during projection period.
+#' @param rc [data.table]\cr
+#'  Historical reference in calibration period.
 #'
 #' @param var_names [character]\cr
 #'  Names of corrected climate data. Defaults to the column names of the
-#'  observed data `oc`.
+#'  observed data `rc`.
 #'
 #' @param margins_controls [list]\cr
 #' A list with arguments to be passed to [kde1d::kde1d()]. Currently, there can be
@@ -48,11 +50,13 @@
 #'  vines and margins. Note that the ellipsis of observed and model data are
 #'  specified with the same arguments.
 #'
-#' @return [data.table]\cr
+#' @return [data.table] OR [list]\cr
 #'  The corrected projection period data in `mp`. Additionally the data frame
-#'  contains the attributes `vine_oc`, `kde_oc`, `vine_mp`, and `kde_mp` which
+#'  contains the attributes `vine_rc`, `kde_rc`, `vine_mp`, and `kde_mp` which
 #'  store the vine copula and kernel density estimation objects of the observed
 #'  and model data.
+#'  If `mp` is a list, the function returns a list of corrected data frames for
+#'  each member of the model ensemble.
 #'
 #' @example R/example.R
 #'
@@ -72,17 +76,20 @@
 #' @import kde1d
 #' @import data.table
 #' @export
-vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
+vbc <- function(mp, mc, rc, var_names = colnames(rc), margins_controls = list(
   mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type = "c"
 ), time_mp = NA, ...) {
-  check_vbc_args(oc, mc, mp, var_names)
+  check_vbc_args(mp, mc, rc, var_names)
+  if(!is.data.frame(mp) & is.list(mp)) {
+    return(vbc_ensemble(mp, mc, rc, var_names, margins_controls, time_mp, ...))
+  }
   mc_kde <- attr(estimate_margins(mc, margins_controls), "kde")
   mpu <- model_vine(mp, margins_controls, ...)
-  ocu <- model_vine(oc, margins_controls, ...)
-  attr(ocu, "vine")$var_types = rep("c", times = ncol(mp))
-  x_mph <- correct_rosenblatt(mpu, ocu, any(margins_controls$type == "zi"))
-  xmin = if(length(margins_controls$xmin) != ncol(oc)) {
-    rep(NA, times = ncol(oc))
+  rcu <- model_vine(rc, margins_controls, ...)
+  attr(rcu, "vine")$var_types = rep("c", times = ncol(mp))
+  x_mph <- correct_rosenblatt(mpu, rcu, any(margins_controls$type == "zi"))
+  xmin = if(length(margins_controls$xmin) != ncol(rc)) {
+    rep(NA, times = ncol(rc))
   } else {
     margins_controls$xmin
   }
@@ -91,8 +98,8 @@ vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
                   SIMPLIFY = TRUE)
   xproj <- data.table(xproj)
   colnames(xproj) <- var_names
-  attr(xproj, "vine_oc") <- attr(ocu, "vine")
-  attr(xproj, "kde_oc") <- attr(ocu, "kde")
+  attr(xproj, "vine_rc") <- attr(rcu, "vine")
+  attr(xproj, "kde_rc") <- attr(rcu, "kde")
   attr(xproj, "vine_mp") <- attr(mpu, "vine")
   attr(xproj, "kde_mp") <- attr(mpu, "kde")
   class(xproj) <- c("vbc", class(xproj))
@@ -107,17 +114,58 @@ vbc <- function(oc, mc, mp, var_names = colnames(oc), margins_controls = list(
 #' @title Check arguments for vine correction
 #' @inheritParams vbc
 #' @import checkmate
-check_vbc_args <- function(oc, mc, mp, var_names) {
-  if(is.list(oc)) {
-    assert_data_frame(oc, types = "numeric", any.missing = FALSE,
+check_vbc_args <- function(mp, mc, rc, var_names) {
+  if(is.data.frame(mp)) {
+    assert_data_frame(mp, types = "numeric", any.missing = FALSE,
                       ncols = ncol(mc))
+  } else {
+    lapply(mp, function(mem){
+      assert_data_frame(mem, types = "numeric", any.missing = FALSE,
+                        ncols = ncol(mc))
+    })
   }
   assert_data_frame(mc, types = "numeric", any.missing = FALSE,
+                    ncols = ncol(rc))
+  assert_data_frame(rc, types = "numeric", any.missing = FALSE,
                     ncols = ncol(mp))
-  assert_data_frame(mp, types = "numeric", any.missing = FALSE,
-                    ncols = ncol(oc))
-  assert_set_equal(apply(oc, 2, class), apply(mc, 2, class), ordered = TRUE)
+  assert_set_equal(apply(rc, 2, class), apply(mc, 2, class), ordered = TRUE)
   assert_set_equal(apply(mc, 2, class), apply(mp, 2, class), ordered = TRUE)
   assert_character(var_names, any.missing = FALSE, unique = TRUE,
                    len = ncol(mp))
+}
+
+#' @title Correction by VBC for model ensembles
+#' 
+#' @inheritParams vbc
+#' 
+#' @return [list]\cr
+#' A list of corrected data frames for each member of the model ensemble.
+#' 
+vbc_ensemble <- function(mp, mc, rc, var_names, margins_controls, time_mp, ...) {
+  mc_kde <- attr(estimate_margins(mc, margins_controls), "kde")
+  rcu <- model_vine(rc, margins_controls, ...)
+  attr(rcu, "vine")$var_types = rep("c", times = ncol(mp))
+  lapply(mp, function(member){
+    mpu <- model_vine(member, margins_controls, ...)
+    x_mph <- correct_rosenblatt(mpu, rcu, any(margins_controls$type == "zi"))
+    xmin = if(length(margins_controls$xmin) != ncol(rc)) {
+      rep(NA, times = ncol(rc))
+    } else {
+      margins_controls$xmin
+    }
+    xproj <- mapply(map_delta, mp = member, mph = data.frame(x_mph),
+                    mp_kde = attr(mpu, "kde"), mc_kde = mc_kde, xmin = xmin,
+                    SIMPLIFY = TRUE)
+    xproj <- data.table(xproj)
+    colnames(xproj) <- var_names
+    attr(xproj, "vine_rc") <- attr(rcu, "vine")
+    attr(xproj, "kde_rc") <- attr(rcu, "kde")
+    attr(xproj, "vine_mp") <- attr(mpu, "vine")
+    attr(xproj, "kde_mp") <- attr(mpu, "kde")
+    class(xproj) <- c("vbc", class(xproj))
+    if(!is.na(time_mp)) {
+      xproj[, "time" := time_mp]
+    }
+    xproj
+  })  
 }

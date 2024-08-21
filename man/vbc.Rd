@@ -5,10 +5,10 @@
 \title{Correct zero inflated climate model simulations via vine copulas}
 \usage{
 vbc(
-  oc,
-  mc,
   mp,
-  var_names = colnames(oc),
+  mc,
+  rc,
+  var_names = colnames(rc),
   margins_controls = list(mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type =
     "c"),
   time_mp = NA,
@@ -16,18 +16,20 @@ vbc(
 )
 }
 \arguments{
-\item{oc}{\link{data.table}\cr
-Measured (and interpolated) observations during calibration period.}
+\item{mp}{\link{data.table} OR \link{list}\cr
+Simulation data from a climate model during projection period. If this is a
+list, the algorithm expects each element to be a member of a model ensemble.
+Each list element is then a data table.}
 
 \item{mc}{\link{data.table}\cr
 Simulation data from a climate model during calibration period.}
 
-\item{mp}{\link{data.table}\cr
-Simulation data from a climate model during projection period.}
+\item{rc}{\link{data.table}\cr
+Historical reference in calibration period.}
 
 \item{var_names}{\link{character}\cr
 Names of corrected climate data. Defaults to the column names of the
-observed data \code{oc}.}
+observed data \code{rc}.}
 
 \item{margins_controls}{\link{list}\cr
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
@@ -55,11 +57,13 @@ vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }
 \value{
-\link{data.table}\cr
+\link{data.table} OR \link{list}\cr
 The corrected projection period data in \code{mp}. Additionally the data frame
-contains the attributes \code{vine_oc}, \code{kde_oc}, \code{vine_mp}, and \code{kde_mp} which
+contains the attributes \code{vine_rc}, \code{kde_rc}, \code{vine_mp}, and \code{kde_mp} which
 store the vine copula and kernel density estimation objects of the observed
 and model data.
+If \code{mp} is a list, the function returns a list of corrected data frames for
+each member of the model ensemble.
 }
 \description{
 The multivariate distribution functions of model and observed are estimated
@@ -79,7 +83,7 @@ univariate bias correction via quantile delta mapping.
 #' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
 #' t_subs = list(day = list(hours = c(6, 9, 12, 15), month = 1:12),
 #'               night = list(hours = c(18, 21, 0, 3), month = 1:12))
-#' mp_vbc = vbc_tsub(climate_sub$oc, climate_sub$mc, climate_sub$mp,
+#' mp_vbc = vbc_tsub(climate_sub$rc, climate_sub$mc, climate_sub$mp,
 #'                   t_subs = t_subs, margins_controls = margins_controls,
 #'                   family_set = "tll", trunc_lvl = Inf)
 #' class(mp_vbc)
@@ -89,9 +93,9 @@ univariate bias correction via quantile delta mapping.
 #'          time = climate$mp$time, margins_controls = margins_controls,
 #'          family_set = "tll", trunc_lvl = Inf)
 #' rbind(
-#'  uncorrected = calc_wasserstein(climate_sub$oc[1:5000, -"time"],
+#'  uncorrected = calc_wasserstein(climate_sub$rp[1:5000, -"time"],
 #'                                 climate_sub$mp[1:5000, -"time"]),
-#'  corrected = calc_wasserstein(climate_sub$oc[1:5000, -"time"],
+#'  corrected = calc_wasserstein(climate_sub$rp[1:5000, -"time"],
 #'                               mp_vbc[1:5000, -"time"])
 #' )
 #' }

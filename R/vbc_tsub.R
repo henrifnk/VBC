@@ -1,6 +1,6 @@
 #' Combine VBC and the Method of fragments
 #' 
-#' @param oc [data.table]\cr
+#' @param rc [data.table]\cr
 #'  Measured (and interpolated) observations during calibration period. 
 #'  Expects one column time in `lubridate`-readable format.
 #' 
@@ -27,6 +27,9 @@
 #' The number of cores to use for parallel processing of the temporal 
 #' subsetting. Default is `NA` which means no parallel processing.
 #' 
+#' @param verbose [logical]\cr
+#' Print messages during the temporal subsetting.
+#' 
 #' @importFrom parallel mclapply
 #' @importFrom lubridate as.duration
 #' 
@@ -42,42 +45,57 @@
 #' @return [data.table]\cr
 #'  The corrected projection period data in `mp`. Additionally the data frame
 #'  contains the attribute `mvd` with one list per temporal subset. In each
-#'  subset `vine_oc`, `kde_oc`, `vine_mp`, and `kde_mp` which store the 
+#'  subset `vine_rc`, `kde_rc`, `vine_mp`, and `kde_mp` which store the 
 #'  vine copula and kernel density estimation objects of the observed and model
 #'  data. The time column is attached to the data. 
 #' 
 #' @example R/example.R
 #' 
+#' @importFrom stats setNames
+#' 
 #' @export
-vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
+vbc_tsub = function(mp, mc, rc, var_names = colnames(rc),
                     margins_controls = list(
                       mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2,
                       type = "c"),
                     t_subs = list(
-                      list(hours = seq(0, 21, by = 3), month = 1:12)
-                      ), overlap = 1, cores_t = NA, ...) {
+                      list(hours = 0:23, month = 1:12)
+                      ), overlap = 1, cores_t = NA, verbose = TRUE, ...) {
   if(is.na(cores_t)) {
     tmp_mph <- lapply(t_subs, function(t_sub) {
-      oc_sub <- subset_time(oc, t_sub$hours, t_sub$month, overlap)
+      rc_sub <- subset_time(rc, t_sub$hours, t_sub$month, overlap)
       mc_sub <- subset_time(mc, t_sub$hours, t_sub$month, overlap)
+      if(is.data.frame(mp)) {
+        mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
+      } else {
+        mp_sub <- lapply(mp, subset_time,  hrs = t_sub$hours, mnt = t_sub$month,
+                         overlap = overlap)
+      }
       mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
       final_idx <- attr(mp_sub, "final_idx")
       idx <- attr(mp_sub, "idx")
-      mph <- vbc(oc_sub, mc_sub, mp_sub, margins_controls =  margins_controls,
+      mph <- vbc(mp_sub, mc_sub, rc_sub, margins_controls =  margins_controls,
                  ...)
       mph[, "idx" := idx]
-      message("subset for ", t_sub$hours, " hours and ", t_sub$month,
-              " month done.")
+      if(verbose) {
+        message("subset for ", t_sub$hours, " hours and ", t_sub$month,
+                " month done.")
+      }
       mph[idx %in% final_idx, ]
     })
   } else {
     tmp_mph <- mclapply(t_subs, function(t_sub) {
-      oc_sub <- subset_time(oc, t_sub$hours, t_sub$month, overlap)
+      rc_sub <- subset_time(rc, t_sub$hours, t_sub$month, overlap)
       mc_sub <- subset_time(mc, t_sub$hours, t_sub$month, overlap)
-      mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
+      if(is.list(mp)) {
+        mp_sub <- lapply(mp, subset_time,  hrs = t_sub$hours, mnt = t_sub$month,
+                         overlap = overlap)
+      } else {
+        mp_sub <- subset_time(mp, t_sub$hours, t_sub$month, overlap)
+      }
       final_idx <- attr(mp_sub, "final_idx")
       idx <- attr(mp_sub, "idx")
-      mph <- vbc(oc_sub, mc_sub, mp_sub, margins_controls =  margins_controls,
+      mph <- vbc(rc_sub, mc_sub, mp_sub, margins_controls =  margins_controls,
                  ...)
       mph[, "idx" := idx]
       mph[idx %in% final_idx, ]
@@ -85,9 +103,9 @@ vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
   }
   mph <- rbindlist(tmp_mph)[order(rank(get("idx")))]
   attribs <- lapply(tmp_mph, function(x) {
-    c("vine_oc", "kde_oc", "vine_mp", "kde_mp") %>% 
-      setNames(c("vine_oc", "kde_oc", "vine_mp", "kde_mp")) %>% 
-      lapply(function(y) attr(x, y))
+    names <- c("vine_rc", "kde_rc", "vine_mp", "kde_mp")
+    names_list <- setNames(names, names)
+    lapply(names_list, function(y) attr(x, y))
   })
   mph[, "idx" := NULL][, "time" := mp[, "time", drop = TRUE]]
   class(mph) <- c("vbc_tsub", class(mph))
@@ -108,8 +126,8 @@ vbc_tsub = function(oc, mc, mp, var_names = colnames(oc),
 #' The months of the year to be used for subsetting.
 subset_time <- function(data, hrs, mnt, overlap = 1) {
   time <- data$time
-  duration <- as.duration(difftime(time[2], time[1]))
-  resolution_hrs <- as.numeric(duration, "hours")
+  resolution_t <- as.duration(difftime(time[2], time[1]))
+  resolution_hrs <- as.numeric(resolution_t, "hours")
   hrs_over <- calc_range(hrs, min = min(hour(time)), max = max(hour(time)),
                          res = resolution_hrs, overlap)
   mnt_over <- calc_range(mnt, min = 1, max = 12, res = 1, overlap)
