@@ -18,17 +18,26 @@ RoxygenNote: 7.3.1
 Imports:
   checkmate,
   data.table,
+  ggplot2,
   kde1d,
   lubridate,
   parallel,
   rvinecopulib,
+  scales,
   transport
 Suggests: 
     testthat (>= 3.0.0),
     spelling,
-    MBC
+    patchwork,
+    leaflet,
+    knitr,
+    rmarkdown
+Remotes:
+    vinecopulib/rvinecopulib@pull-zi,
+    tnagler/kde1d@dev
 Config/testthat/edition: 3
 Language: en-US
 Depends: 
     R (>= 2.10)
 LazyData: true
+VignetteBuilder: knitr

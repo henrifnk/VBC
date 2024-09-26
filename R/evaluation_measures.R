@@ -84,9 +84,12 @@ calc_pcop <- function(data, margins_controls, ...) {
 #' @param n `integer(1)`\cr
 #'  Length of samples to be drawn from model and observed data.
 #'
-#' @param scale_dta `logical(1)`\cr
-#'  If `TRUE` the data is scaled before the calculation of the Wasserstein.
-#'  Default is `TRUE`.
+#' @param scale_dta `cahracter(1)`\cr
+#' Scale the data before calculating the Wasserstein distance. Default is
+#' "observed". Possible values are "both", "observed", and "sd". If "both" the
+#' data are scaled to zero mean and unit variance. If "observed" the data are
+#' scaled to zero mean and unit variance of the observed data. If "sd" the data
+#' are scaled to zero mean and unit variance.
 #'
 #' @param ... \cr
 #'  Further arguments passed to [transport::transport].
@@ -99,19 +102,38 @@ calc_pcop <- function(data, margins_controls, ...) {
 #'
 #' @seealso [transport::wasserstein()]
 #'
-#' @importFrom transport pp transport.pp wasserstein
+#' @importFrom transport pp transport.pp wasserstein wasserstein1d
 #'
 #' @export
 calc_wasserstein <- function(observed, model, n = nrow(observed),
-                             scale_dta = TRUE, ...) {
+                             scale_dta = "observed", ...) {
   assert_set_equal(ncol(observed), ncol(model))
   assert_set_equal(colnames(model), colnames(observed), ordered = TRUE)
   assert_integerish(n, lower = 1, len = 1, any.missing = FALSE)
-  if(scale_dta) observed <- scale(observed); model = scale(model)
-  samle_n <- min(nrow(observed), nrow(model), n)
+  samle_n <- min(nrow(model), n)
+  if(ncol(observed) == 1) {
+    return(
+      c("Wasserstein_1" = wasserstein1d(unlist(observed), unlist(model), p = 1),
+        "Wasserstein_2" = wasserstein1d(unlist(observed), unlist(model), p = 2))
+    )
+  }
+  if(scale_dta == "both") {
+    observed <- scale(observed)
+    model <- scale(model)
+  } else if(scale_dta == "observed") {
+    observed <- scale(observed)
+    model <- scale(model, center = attr(observed, "scaled:center"),
+                   scale = attr(observed, "scaled:scale"))
+  } else if(scale_dta == "sd") {
+    model <- scale(model, center = FALSE)
+    observed <- scale(observed, center = FALSE)
+  }
+
   pp_o <- pp(observed[sample(nrow(observed), samle_n),])
   pp_m <- pp(model[sample(nrow(model), samle_n),])
   tplan_mo <- transport.pp(pp_o, pp_m, ...)
-  c("Wasserstein_1" = wasserstein(pp_o, pp_m, p = 1, tplan = tplan_mo),
-    "Wasserstein_2" = wasserstein(pp_o, pp_m, p = 2, tplan = tplan_mo))
+  c(
+    "Wasserstein_1" = wasserstein(pp_o, pp_m, p = 1, tplan = tplan_mo),
+    "Wasserstein_2" = wasserstein(pp_o, pp_m, p = 2, tplan = tplan_mo)
+  )
 }

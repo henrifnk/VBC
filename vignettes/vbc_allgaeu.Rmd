@@ -1,0 +1,268 @@
+---
+title: "Evaluation of VBC in the Allgäuer Hochalpen"
+author: "Henri Funk"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Evaluation of VBC in the Allgäuer Hochalpen}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = FALSE,
+  comment = "#>"
+)
+```
+
+```{r libsnloads}
+library(patchwork)
+library(leaflet)
+library(knitr)
+devtools::load_all()
+# library(VBC)
+
+theme = theme(strip.text.y  = element_text(face = "bold"),
+              strip.text = element_text(size = 7),
+              axis.title = element_text(size = 6),
+              axis.text = element_text(size = 5),
+              legend.text = element_text(size = 5),
+              legend.title = element_text(size = 6),
+              panel.grid.minor = element_blank())
+```
+
+## Allgäuer Hochalpen
+
+The Allgäuer Hochalpen are a mountainous nature reserve in the northern
+Alps at the border to Austria. With up to 2,600 meters above sea level,
+the nature reserve is the first northern mountain range in the Alps. Due
+to this regional exposition, the Allgäuer Hochalpen are known for their
+high precipitation rates and cold temperatures. The complex topography
+of the region leads to a high regional climatic variability which is
+challenging for climate models to simulate.
+
+```{r leaflet-map, echo=FALSE, fig.align="center", out.width="80%"}
+leaflet() %>%
+  addTiles() %>%
+  setView(lng = 10.4, lat = 47.40, zoom = 10) %>%
+  addMarkers(lng = 10.4, lat = 47.40, popup = "Allgäuer Hochalpen") %>%
+  addScaleBar(position = "bottomleft", options = scaleBarOptions(maxWidth = 100))
+```
+
+# Data
+
+This exemplary showcases the potentials of the VBC package to correct
+for the bias in the climate model data of the Allgäuer Hochalpen during
+2011 to 2020 for 5 key climate variables.
+The error prone data consists of the 50 member of the
+regional climate model large ensemble, CRCM5-LE in a 12km resolution.
+`mp_dts` contains the model data during projection (2011 - 2020),
+`mc_dts` the model data during the calibration period (1981 - 2010). The
+CRCM-5 data are coprrected using the SDCLIREF version2 reference data in
+12km resolution. The reference data `oc_dt` is used to correct the model
+data. `op_dt` contains the targeted distribution in is held out for
+elevation purposes. For more information, see
+
+-   Funk, H. (2024). Towards more realistic climate models - A
+multivariate bias correction for partly zero-inflated margins based
+on vine copulas.
+
+-   Lehr- und Forschungseinheit für physische Geographie und komplexe
+Umweltsysteme, & Wood, R. R. (2024). SDCLIREFv2 (Version 2) [Data
+set]. Zenodo. <https://doi.org/10.5281/zenodo.13221576>
+
+-   Funk, H. (2024). Bias Correction of CRCM5-LE for Hydrological
+Bavaria (1.0.0) [Data set]. Zenodo.
+<https://doi.org/10.5281/zenodo.13348397>
+
+```{r library_n_data}
+load("/home/henri_funk/Schreibtisch/PEG-Iller-Kempten_14_12.rda")
+wd = readRDS("/home/henri_funk/Schreibtisch/06_globaldist_by_tempII.rds")
+```
+
+## Bias Correction and Hyperparametersetting
+
+The bias correction is performed using the VBC package.
+For demonstration purposes, the bias correction is performed for the
+winter nights in the Allgäuer Hochalpen. 
+The winter nights are defined as the hours between 21:00 and 06:00 in
+the months December, January, and February. 
+
+```{r temporal_sub}
+winter_night = list(
+  nightDJF = list(hours = c(21, 0, 3, 6), month = c(12, 1, 2))
+)
+```
+
+We showcase the bias correction on the first 5 members of the CRCM5-LE.
+Therefore we subset the model data.
+
+```{r subset_members}
+members <- mp_dts$member
+mem_5 = c("kba", "kbb", "kbc", "kbd", "kbe")
+members = members[members %in% mem_5]
+mp_dts = mp_dts[member %in% mem_5, ][, member := NULL]
+mc_dts = mc_dts[member %in% mem_5, ][, member := NULL]
+split_mp <- split(mp_dts, members)
+```
+
+To correct for the winter nights in the first 5 members of the CRCM5-LE,
+we use the `vbc_tsub` function. 
+The function corrects the model data using the reference data `oc_dt`.
+For the marinal distibutions, we specify that the lower bound by `xmin` and
+the type of the marginal distribution by `type`. 
+The type `c` indicates a continuous distribution, while `zi` indicates a
+zero-inflated distribution.
+The bias correction is performed using the *tll* family of vine copulas.
+The truncation level is set to infinity.
+
+The function now efficiantly corrects the model data for each temporal subset in
+`t_subs` and each member in `split_mp`.
+
+```{r correct_winternights}
+margins_controls = list(
+  xmin = c(NaN, 0, NaN, 0, 0), type = c("c", "zi", "c", "zi", "c")
+)
+
+vbc = vbc_tsub(mp = split_mp, mc = mc_dts, rc = oc_dt, t_subs = winter_night,
+               margins_controls = margins_controls, family_set = "tll",
+               trunc_lvl = Inf)
+```
+
+## Evaluation
+
+### Distributional Similarity
+
+The bias correction is evaluated by comparing the corrected model data
+with the reference data `op_dt`.
+Using `plot_tails`, VBC provides a visual tool to compare the marginal
+distribution of a climate variable before and after the bias correction with
+the target reference data.
+Ideally, the corrected model data should be as close as possible to the
+reference data.
+
+
+```{r plot_rsds, fig.align="center", out.width="100%"}
+plot_tails(mp_dts[hour(time) %in% c(21, 0, 3, 6) &
+                    month(time) %in% c(12, 1, 2), ], "dew", scale_d = 5,
+           offset = .1) + theme +
+  ggtitle("Pre-Correction") + ylab("") + xlab("") +
+  theme(legend.position = "none") +
+  plot_tails(rbindlist(vbc), "dew", scale_d = 5, offset = 1) + theme +
+  ggtitle("Post-Correction") + xlab("") +
+  plot_tails(op_dt[hour(time) %in% c(21, 0, 3, 6) &
+                     month(time) %in% c(12, 1, 2), ], "dew", scale_d = 5,
+             offset = 1) + theme + ylab("") + 
+  xlab("Dewpoint Temperature in °C") +
+  ggtitle("Reference") + theme(legend.position = "none") +
+  plot_layout(ncol = 1)
+
+```
+
+To quantify the improvement of the bias correction, we calculate the
+Wasserstein distance between the corrected model data and the reference.
+The Wasserstein distance is a measure of the distance between two
+probability distributions.
+
+```{r calc_wd_dew}
+wd_post = sapply(vbc, function(mem) {
+  calc_wasserstein(op_dt[hour(time) %in% c(21, 0, 3, 6) &
+                           month(time) %in% c(12, 1, 2), 3], mem[, 3],
+                   , scale_dta = "none")
+})
+
+
+wd_pre = sapply(split_mp, function(mem) {
+  calc_wasserstein(op_dt[hour(time) %in% c(21, 0, 3, 6) &
+                           month(time) %in% c(12, 1, 2), 3],
+                   mem[hour(time) %in% c(21, 0, 3, 6) &
+                         month(time) %in% c(12, 1, 2), 3],
+                   scale_dta = "none")
+})
+
+improvement = wd_pre[2, ] - wd_post[2,]
+kable(cbind("WD2 pre correction" = wd_pre[2, ],
+            "WD2 post correction" = wd_post[2,],
+            "imporvement after correction" = improvement), digits = 2)
+```
+
+At the univariate level of dew point temperature, the bias correction
+improves the model data for any of the 5 members of the CRCM5-LE.
+
+```{r calculate_multivariate}
+wd_post = sapply(vbc, function(mem) {
+  calc_wasserstein(op_dt[hour(time) %in% c(21, 0, 3, 6) &
+                           month(time) %in% c(12, 1, 2), 1:5], mem[, 1:5])
+})
+
+wd_pre = sapply(split_mp, function(mem) {
+  calc_wasserstein(op_dt[hour(time) %in% c(21, 0, 3, 6) &
+                           month(time) %in% c(12, 1, 2), 1:5],
+                   mem[hour(time) %in% c(21, 0, 3, 6) &
+                         month(time) %in% c(12, 1, 2), 1:5])
+})
+improvement = wd_pre - wd_post
+kable(cbind("WD2 pre correction" = wd_pre[2, ],
+            "WD2 post correction" = wd_post[2,],
+            "imporvement after correction" = improvement[2,]), digits = 2)
+```
+
+On the global multivariate distribution, the bias correction improves the
+model data for any of the 5 members to a 6th of its 2nd Wasserstein Distance to
+a constant level of 1.
+
+### Perservation of Weather
+
+When correcting the model data, it is important that the bias correction method 
+preserves the course of weather patterns of the model data.
+This way the original characteristics of the climate model are still maintained.
+The MCI is a measure of the preservation of the weather patterns.
+
+```{r calc_mci}
+mci = mapply(function(before, after) {
+  calc_mci(before[hour(time) %in% c(21, 0, 3, 6) & 
+                    month(time) %in% c(12, 1, 2), 1:5],
+           after[, 1:5], time_p = after$time,
+           margins_controls = margins_controls)$mci
+}, before = split_mp, after = vbc)
+mci = cbind.data.frame(mci, time = vbc[[1]]$time)
+mci$mean = rowMeans(mci[, 1:5])
+mci2020 = mci[mci$time > "2019-11-01" & mci$time < "2020-03-01", ]
+
+```
+
+The MCI of the first 5 members of the CRCM5-LE during winter nights 2019
+is mostly between 0 and -0.1.
+A MCI of 0 indicates an non-invasive bias correction that did not change the
+course of the weather patterns from the model data.
+The MCI is limited at $[-1, 1]$ indicating a maximal change in the course of
+weather.
+
+```{r plot_mci2020}
+ggplot(mci2020, aes(x = time)) +
+  geom_line(mapping = aes(y = kba), colour = "lightblue", linewidth = 0.3) +
+  geom_line(mapping = aes(y = kbb), colour = "lightblue", linewidth = 0.3) +
+  geom_line(mapping = aes(y = kbc), colour = "lightblue", linewidth = 0.3) +
+  geom_line(mapping = aes(y = kbd), colour = "lightblue", linewidth = 0.3) +
+  geom_line(mapping = aes(y = kbe), colour = "lightblue", linewidth = 0.3) +
+  geom_line(mapping = aes(y = mean), colour = "navyblue") + 
+  geom_hline(yintercept = 0, linetype = "dashed", colour = "lightgreen") +
+  theme_light() + theme +
+  labs(
+    caption = "MCI of the first 5 members of the CRCM5-LE (lightblue) and their average (navyblue) during winter nights 2019",
+    x = "Time", y = "MCI")
+```
+
+The average MCI of a corrected timeseries can be used for the global assesment of 
+the correction.
+
+```{r}
+kable(cbind(average = apply(mci[, 1:5], 2, mean),
+            sd = apply(mci[, 1:5], 2, sd)), digits = 2)
+```
+
+The MCI is relatively close to zero but mostly negative.

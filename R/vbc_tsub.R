@@ -200,7 +200,7 @@ calc_range = function(v, min, max, res, overlap = 1) {
 #' @title Invert a list
 #' 
 #' @param list [list]\cr
-#' A list of detph 2. The first depth indicates the temporal subset and the
+#' A list of depth 2. The first depth indicates the temporal subset and the
 #' second depth the members of the model ensemble.
 #' 
 #' @return [list]\cr

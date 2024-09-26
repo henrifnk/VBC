@@ -4,7 +4,13 @@
 \alias{calc_wasserstein}
 \title{Calculate Wasserstein Distance}
 \usage{
-calc_wasserstein(observed, model, n = nrow(observed), scale_dta = TRUE, ...)
+calc_wasserstein(
+  observed,
+  model,
+  n = nrow(observed),
+  scale_dta = "observed",
+  ...
+)
 }
 \arguments{
 \item{observed}{\link{data.frame}\cr
@@ -16,9 +22,12 @@ Simulation climate data from the climate model.}
 \item{n}{\code{integer(1)}\cr
 Length of samples to be drawn from model and observed data.}
 
-\item{scale_dta}{\code{logical(1)}\cr
-If \code{TRUE} the data is scaled before the calculation of the Wasserstein.
-Default is \code{TRUE}.}
+\item{scale_dta}{\code{cahracter(1)}\cr
+Scale the data before calculating the Wasserstein distance. Default is
+"observed". Possible values are "both", "observed", and "sd". If "both" the
+data are scaled to zero mean and unit variance. If "observed" the data are
+scaled to zero mean and unit variance of the observed data. If "sd" the data
+are scaled to zero mean and unit variance.}
 
 \item{...}{\cr
 Further arguments passed to \link[transport:transport]{transport::transport}.}
