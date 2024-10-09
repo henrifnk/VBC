@@ -56,7 +56,9 @@ This exemplary showcases the potentials of the VBC package to correct for the bi
 -   Funk, H. (2024). Bias Correction of CRCM5-LE for Hydrological Bavaria (1.0.0) [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.13348397>
 
 ```{r library_n_data}
-load("/home/henri_funk/Schreibtisch/PEG-Iller-Kempten_14_12.rda")
+load(
+  url("https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1")
+)
 ```
 
 ## Bias Correction
