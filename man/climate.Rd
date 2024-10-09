@@ -23,9 +23,9 @@ Sample CRCM5-LE member "kba" and SDCLIREF v1 data for the city of Munich
 \details{
 Data are available in 3 hourly resolution from:
 
-01.01.1991 - 31.12.2000 for calibration
+01.01.2005 - 31.12.2007 for calibration
 
-01.01.2001 - 31.12-2010 for projection.
+01.01.2008 - 31.12-2010 for projection.
 
 With 5 climate variables to correct:
 

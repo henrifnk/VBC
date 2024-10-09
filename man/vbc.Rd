@@ -79,25 +79,41 @@ univariate bias correction via quantile delta mapping.
 \examples{
 #' \dontrun{
 #' data("climate")
-#' climate_sub = lapply(climate, function(x) x[, c("pr", "tas", "dew", "time")])
-#' margins_controls = list(xmin = c(0, NaN, NaN), type = c("zi", "c", "c"))
-#' t_subs = list(day = list(hours = c(6, 9, 12, 15), month = 1:12),
-#'               night = list(hours = c(18, 21, 0, 3), month = 1:12))
-#' mp_vbc = vbc_tsub(climate_sub$rc, climate_sub$mc, climate_sub$mp,
-#'                   t_subs = t_subs, margins_controls = margins_controls,
-#'                   family_set = "tll", trunc_lvl = Inf)
+#' margins_controls <- list(xmin = c(NaN, 0, NaN, 0, 0),
+#'                          type = c("c", "zi", "c", "zi", "c"))
+#' temp_subs <- list(DJF = list(hours = seq(0, 21, 3), month = c(12, 1, 2)),
+#'                   MAM = list(hours = seq(0, 21, 3), month = 3:5),
+#'                   JJA = list(hours = seq(0, 21, 3), month = 6:8),
+#'                   SON = list(hours = seq(0, 21, 3), month = 9:11))
+#'                   
+#' mp_vbc = vbc_tsub(climate$mp, climate$mc, climate$rc, t_subs = temp_subs,
+#'                   margins_controls = margins_controls, family_set = "tll",
+#'                   trunc_lvl = Inf)
 #' class(mp_vbc)
 #' attr(mp_vbc, "mvd")
 #' 
-#' calc_mci(climate_sub$mp[, -"time"], mp_vbc[, -"time"],
-#'          time = climate$mp$time, margins_controls = margins_controls,
-#'          family_set = "tll", trunc_lvl = Inf)
-#' rbind(
-#'  uncorrected = calc_wasserstein(climate_sub$rp[1:5000, -"time"],
-#'                                 climate_sub$mp[1:5000, -"time"]),
-#'  corrected = calc_wasserstein(climate_sub$rp[1:5000, -"time"],
-#'                               mp_vbc[1:5000, -"time"])
-#' )
+#' measure = lapply(temp_subs, function(sub) {
+#'    idx = which(hour(mp_vbc$time) \%in\% sub$hour &
+#'                   month(mp_vbc$time) \%in\% sub$month)
+#'    idxrp = which(hour(climate$rp$time) \%in\% sub$hour &
+#'                      month(climate$rp$time) \%in\% sub$month)
+#'    mci = calc_mci(climate$mp[idx, -"time"], mp_vbc[idx, -"time"],
+#'                     time = climate$mp$time[idx])
+#'    mci = attr(mci, "global_mci")
+#'    
+#'    uncorrected = calc_wasserstein(climate$rp[idxrp, -"time"],
+#'                                     climate$mp[idx, -"time"])
+#'    corrected = calc_wasserstein(climate$rp[idxrp, -"time"],
+#'                                 mp_vbc[idx, -"time"])
+#'    data.table(
+#'        ModelCorrectionInconsistancy = mci,
+#'        Wasserstein2_uncorrected = uncorrected[2],
+#'        Wasserstein2_corrected = corrected[2],
+#'        Improvement_Wasserstein2 = uncorrected[2] - corrected[2], 
+#'        month = paste(sub$month, collapse = "-")
+#'        )
+#' })
+#' rbindlist(measure)
 #' }
 }
 \references{

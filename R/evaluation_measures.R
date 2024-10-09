@@ -20,9 +20,7 @@
 #'  information are given.
 #'
 #' @param p `numeric(1)`\cr
-#'  The power of the global MCI. Default is 2.
-#'
-#' @inheritParams vbc
+#'  The power of the global MCI. Default is 1.
 #'
 #' @return [data.table]\cr
 #' Contains the points of time if supplied in `time_p` and the respective
@@ -34,39 +32,37 @@
 #' @example R/example.R
 #'
 #' @export
-calc_mci <- function(model, model_correction, time_p = NA, p = 2,
-                     margins_controls = list(mult = NULL, xmin = NaN,
-                                             xmax = NaN, bw = NA, deg = 2,
-                                             type = "c"), ...) {
+calc_mci <- function(model, model_correction, time_p = NA, p = 1) {
   assert_set_equal(dim(model), dim(model_correction), ordered = TRUE)
   assert_set_equal(colnames(model), colnames(model_correction), ordered = TRUE)
   if(!anyNA(time_p)) {
     assert_vector(time_p, len = nrow(model), any.missing = FALSE)
   } else time_p <- 1:nrow(model)
-  pcop_model = calc_pcop(model, margins_controls, ...)
-  pcop_correction = calc_pcop(model_correction, margins_controls, ...)
+  pcop_model = calculate_pemp(model)
+  pcop_correction = calculate_pemp(model_correction)
   probs = data.table(pcop_model, pcop_correction, time_p)
   colnames(probs) = c("nep_model", "nep_correction", "time")
-  probs[, "mci" := get("nep_model") - get("nep_correction")]
-  attr(probs, "global_mci") = mean(abs(probs$mci)^p)^1/p
-  attr(probs, "kde_model") = attr(pcop_model, "kde")
-  attr(probs, "kde_correction") = attr(pcop_correction, "kde")
-  attr(probs, "vine_model") = attr(pcop_model, "vine")
-  attr(probs, "vine_correction") = attr(pcop_correction, "vine")
+  probs[, "mci" := abs(get("nep_model") - get("nep_correction"))]
+  attr(probs, "global_mci") = mean(probs$mci^p)^1/p
   probs
 }
 
 #' @title Calculate Non-Exceedance Probability
 #'
-#' @inheritParams model_vine
-#' 
-#' @return A data frame with the non-exceedance probability for the events.
-calc_pcop <- function(data, margins_controls, ...) {
-  u_data = model_vine(data, margins_controls, ...)
-  z = pvinecop(u_data, attr(u_data, "vine"))
-  attr(z, "kde") = attr(u_data, "kde")
-  attr(z, "vine") = attr(u_data, "vine")
-  z
+#' @param data [data.table]\cr
+#' On each of the rows in the data.table, the non-exceedance probability is
+#' calculated. 
+#'  
+#' @return A data frame with the non-exceedance probability for the events. The 
+#' non-exceedance probability is the percentage of rows that satisfy the
+#' condition that all values in the row are less or equal to the values in the
+#' row.
+calculate_pemp <- function(data) {
+  apply(data, 1, function(row) {
+    row_satisfies_condition = apply(data, 1, function(x) all(x <= row))
+    # Calculate the percentage of rows that satisfy the condition
+    mean(row_satisfies_condition)
+  })
 }
 
 #' @title Calculate Wasserstein Distance

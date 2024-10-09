@@ -2,15 +2,15 @@
 #' 
 #' @param rc [data.table]\cr
 #'  Measured (and interpolated) observations during calibration period. 
-#'  Expects one column time in `lubridate`-readable format.
+#'  Expects one column time.
 #' 
 #' @param mc [data.table]\cr
 #'  Simulation data from a climate model during calibration period.
-#'  Expects one column time in `lubridate`-readable format.
+#'  Expects one column time.
 #'
 #' @param mp [data.table]\cr
 #'  Simulation data from a climate model during projection period.
-#'  Expects one column time in `lubridate`-readable format.
+#'  Expects one column time.
 #'  
 #' @inheritParams vbc
 #' 
