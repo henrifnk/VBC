@@ -59,11 +59,10 @@ for the bias in the climate model data of the Allgäuer Hochalpen during
 of the 50 member of the regional climate model large ensemble, CRCM5-LE
 in a 12km resolution. `mp_dts` contains the model data during projection
 (2011 - 2020), `mc_dts` the model data during the calibration period
-(1981 - 2010). The CRCM-5 data are coprrected using the SDCLIREF
-version2 reference data in 12km resolution. The reference data `oc_dt`
-is used to correct the model data. `op_dt` contains the targeted
-distribution in is held out for elevation purposes. For more
-information, see
+(1981 - 2010). The CRCM-5 data are corrected using the SDCLIREF version2
+reference data in 12km resolution. The reference data `oc_dt` is used to
+correct the model data. `op_dt` contains the targeted distribution in is
+held out for elevation purposes. For more information, see
 
 -   Funk, H. (2024). Towards more realistic climate models - A
     multivariate bias correction for partly zero-inflated margins based
@@ -82,7 +81,7 @@ load("/home/henri_funk/Schreibtisch/PEG-Iller-Kempten_14_12.rda")
 wd = readRDS("/home/henri_funk/Schreibtisch/06_globaldist_by_tempII.rds")
 ```
 
-## Bias Correction and Hyperparametersetting
+## Bias Correction
 
 The bias correction is performed using the VBC package. For
 demonstration purposes, the bias correction is performed for the winter
@@ -110,14 +109,14 @@ split_mp <- split(mp_dts, members)
 
 To correct for the winter nights in the first 5 members of the CRCM5-LE,
 we use the `vbc_tsub` function. The function corrects the model data
-using the reference data `oc_dt`. For the marinal distibutions, we
+using the reference data `oc_dt`. For the marginal distributions, we
 specify that the lower bound by `xmin` and the type of the marginal
 distribution by `type`. The type `c` indicates a continuous
 distribution, while `zi` indicates a zero-inflated distribution. The
-bias correction is performed using the *tll* family of vine copulas. The
+bias correction is performed using the `TLL` family of vine copulas. The
 truncation level is set to infinity.
 
-The function now efficiantly corrects the model data for each temporal
+The function now efficiently corrects the model data for each temporal
 subset in `t_subs` and each member in `split_mp`.
 
 ```{r correct_winternights}
@@ -210,7 +209,7 @@ On the global multivariate distribution, the bias correction improves
 the model data for any of the 5 members to a 6th of its 2nd Wasserstein
 Distance to a constant level of 1.
 
-### Perservation of Weather
+### Preservation of Weather
 
 When correcting the model data, it is important that the bias correction
 method preserves the course of weather patterns of the model data. This
@@ -220,43 +219,43 @@ patterns.
 
 ```{r calc_mci}
 mci = mapply(function(before, after) {
-  calc_mci(before[hour(time) %in% c(21, 0, 3, 6) & 
-                    month(time) %in% c(12, 1, 2), 1:5],
-           after[, 1:5], time_p = after$time,
-           margins_controls = margins_controls)$mci
+  idx = which(hour(before$time) %in% c(21, 0, 3, 6) & 
+                    month(before$time) %in% c(12, 1, 2))
+  calc_mci(before[idx, 1:5],after[, 1:5],
+           time_p = before$time[idx])$mci
 }, before = split_mp, after = vbc)
 mci = cbind.data.frame(mci, time = vbc[[1]]$time)
-mci$mean = rowMeans(mci[, 1:5])
-mci2020 = mci[mci$time > "2019-11-01" & mci$time < "2020-03-01", ]
+mci$median = apply(mci[, 1:5], 1, median)
 ```
 
 The MCI of the first 5 members of the CRCM5-LE during winter nights 2019
-is mostly between 0 and -0.1. A MCI of 0 indicates an non-invasive bias
+is mostly between 0 and 0.1. A MCI of 0 indicates an non-invasive bias
 correction that did not change the course of the weather patterns from
-the model data. The MCI is limited at $[-1, 1]$ indicating a maximal
+the model data. The MCI is limited at $[0, 1]$ indicating a maximal
 change in the course of weather.
 
 ```{r plot_mci2020, fig.align="center", fig.width=8, fig.height=3}
+mci2020 = mci[mci$time > "2019-11-01" & mci$time < "2020-03-01", ]
 ggplot(mci2020, aes(x = time)) +
   geom_line(mapping = aes(y = kba), colour = "lightblue", linewidth = 0.3) +
   geom_line(mapping = aes(y = kbb), colour = "lightblue", linewidth = 0.3) +
   geom_line(mapping = aes(y = kbc), colour = "lightblue", linewidth = 0.3) +
   geom_line(mapping = aes(y = kbd), colour = "lightblue", linewidth = 0.3) +
   geom_line(mapping = aes(y = kbe), colour = "lightblue", linewidth = 0.3) +
-  geom_line(mapping = aes(y = mean), colour = "navyblue") + 
+  geom_line(mapping = aes(y = median), colour = "navyblue") + 
   geom_hline(yintercept = 0, linetype = "dashed", colour = "lightgreen") +
   theme_light() + theme +
   labs(
-    caption = "MCI of the first 5 members of the CRCM5-LE (lightblue) and their average (navyblue) during winter nights 2019",
+    caption = "MCI of the first 5 members of the CRCM5-LE (lightblue) and their median (navyblue) during winter nights 2019",
     x = "Time", y = "MCI")
 ```
 
-The average MCI of a corrected timeseries can be used for the global
-assessment of the correction.
+The average MCI of a corrected time series can be used for the global
+assessment of the correction. With an median inconsistancy of 0.03, we
+can assume the weather in winter nights 2019/2020 to be mainly
+preserved.
 
 ```{r}
-kable(cbind(average = apply(mci[, 1:5], 2, mean),
-            sd = apply(mci[, 1:5], 2, sd)), digits = 2)
+kable(cbind(median = apply(mci[, 1:5], 2, median),
+            sd = apply(mci[, 1:5], 2, sd)), digits = 3)
 ```
-
-The MCI is relatively close to zero but mostly negative.
