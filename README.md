@@ -1,12 +1,21 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# VBC <img src="man/figures/logo.svg" align="right" height="139" alt="" />
+# Bias Correction by Zero-Inflated Vine Copulas <img src="man/figures/logo.svg" align="right" height="130" alt="" />
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of VBC is to …
+Vine Copula Bias Correction for partially zero-inflated margins (VBC) is
+a multivariate bias correction methodology anchored in vine copula
+theory. For this method, we generalised the margins, the copula and the
+vine copula density to accommodate mixture distributions and propose an
+extension to the Rosenblatt transform that can handle non-continuous
+pseudo observations. The proposed method is tailored to model
+dependencies between heavy tailed, zero-inflated and continuous climate
+variables with high temporal resolution, ensuring precise corrections.
+Notably, our approach is designed for high interpretability, enabling
+control and assessment of the results.
 
 ## Installation
 
@@ -14,39 +23,124 @@ You can install the development version of VBC from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+# without vignette
 devtools::install_github("henrifnk/VBC")
+# with vignette
+devtools::install_github("henrifnk/VBC", build_vignettes = TRUE)
 ```
 
-## Example
+## Quickstart
 
-This is a basic example which shows you how to solve a common problem:
+We aim to correct CRCM5 climate data for Munich, Germany, for the year
+2010. The data is available in the package as `climate`. We will use the
+`vbc` function to correct the data.
 
 ``` r
+library(data.table)
+library(ggplot2)
+library(knitr)
+library(patchwork)
 library(VBC)
-## basic example code
+
+data("climate")
+
+climate_2010 = lapply(climate, function(data) data[year(time) == 2010, ])
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Climate data are available in 3-hourly resolution for the variables
+temperature, precipitation, dew point temperature, radiation and wind
+speed. The high temporal resolution causes inflation in the variables
+radiation and precipitation. Visually, check the shape of the marginal
+distributions of the model data and the reference data using
+`plot_tails`. The distance between the two marginal distributions can be
+quantified using the Wasserstein distance.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+plot_tails(climate_2010$mp, "pr", scale_d = 0.2, offset = 3) +
+  labs(x = "", title = "Marginal distribution of uncorrected model data") +
+  xlim(c(-1, 15)) + theme(legend.position = "none") +
+  plot_tails(climate_2010$rp, "pr", scale_d = 1.8, offset = 2) +
+  labs(x = "precipitation (mm/h)",  
+       title = "Marginal targeted distribution of reference data") +
+  xlim(c(-1, 15)) + scale_y_continuous(name = "") +
+  plot_layout(ncol = 1) 
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
+<img src="man/figures/README-zeroinflation-1.png" width="90%" style="display: block; margin: auto;" />
 
-You can also embed plots, for example:
+``` r
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+wd_pre = calc_wasserstein(climate_2010$mp[, "pr"], climate_2010$rp[, "pr"])
+wd_pre
+#> Wasserstein_1 Wasserstein_2 
+#>    0.05947432    0.21964470
+```
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+For the correction, we need to specify the type of margins and their
+limits. `"zi"` defines a univariate margins and `"c"` a stricktly
+continous margin. `xmin` specifies the lower bound of the margins. For
+the vine copula modelling, we use the *TLL* family set with no
+truncation on the vine.
+
+We can then visually and quantitatively asses the correction in `mp_vbc`
+by comparing the corrected data and the reference data by plotting the
+tails and calculating the Wasserstein distances. The results can be
+compared to those above.
+
+``` r
+plot_tails(mp_vbc, "pr", scale_d = 1.8, offset = 20) +
+  labs(x = "precipitation (mm/h)",
+       title = "Marginal distribution of uncorrected model data")
+```
+
+<img src="man/figures/README-zi-correction-1.png" width="90%" style="display: block; margin: auto;" />
+
+``` r
+wd_post = calc_wasserstein(climate_2010$rp[, "pr"], mp_vbc[, "pr"])
+
+kable(data.frame("Wasserstein_Uncorrected" = wd_pre,
+                 "Wasserstein_Corrected" = wd_post,
+                 "Improvement" = wd_pre - wd_post,
+                 "Improvement_in_Perc" = (wd_pre - wd_post) / wd_pre * 100),
+      digits = 2)
+```
+
+|               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
+|:--------------|------------------------:|----------------------:|------------:|--------------------:|
+| Wasserstein_1 |                    0.06 |                  0.02 |        0.04 |               61.41 |
+| Wasserstein_2 |                    0.22 |                  0.08 |        0.14 |               63.71 |
+
+Further we can quantify the multivariate improvement of our correction
+in terms of the wasserstein distances.
+
+``` r
+wd_mvd_post = calc_wasserstein(climate_2010$rp[, -"time"], mp_vbc)
+wd_mvd_pre = calc_wasserstein(climate_2010$rp[, -"time"],
+                              climate_2010$mp[, -"time"])
+iprovement = wd_mvd_pre - wd_mvd_post
+
+kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
+                 "Wasserstein_Corrected" = wd_mvd_post,
+                 "Improvement" = iprovement,
+                 "Improvement_in_Perc" = iprovement / wd_mvd_pre * 100),
+      digits = 2)
+```
+
+|               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
+|:--------------|------------------------:|----------------------:|------------:|--------------------:|
+| Wasserstein_1 |                    0.66 |                  0.38 |        0.28 |               42.64 |
+| Wasserstein_2 |                    0.95 |                  0.48 |        0.47 |               49.65 |
+
+# Citation
+
+If you use `VBC` in a scientific publication, please [cite](TBD) it as:
+
+    APA Style...
+
+BibTeX:
+
+``` tex
+@InProceedings{
+TBD
+}
+```
