@@ -19,14 +19,19 @@ control and assessment of the results.
 
 ## Installation
 
-You can install the development version of VBC from
+You can install the development versions for zero inflation from `kde1d`
+and `rvinecopulib` before installing the development version of VBC from
 [GitHub](https://github.com/) with:
 
 ``` r
+# prerequisits
+remotes::install_github("vinecopulib/rvinecopulib@pull-zi")
+remotes::install_github("tnagler/kde1d@dev")
+
 # without vignette
-devtools::install_github("henrifnk/VBC")
+remotes::install_github("henrifnk/VBC")
 # with vignette
-devtools::install_github("henrifnk/VBC", build_vignettes = TRUE)
+remotes::install_github("henrifnk/VBC", build_vignettes = TRUE)
 ```
 
 ## Quick Start
@@ -128,8 +133,8 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
 
 |               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
 |:--------------|------------------------:|----------------------:|------------:|--------------------:|
-| Wasserstein_1 |                    0.66 |                  0.37 |        0.28 |               42.93 |
-| Wasserstein_2 |                    0.95 |                  0.48 |        0.48 |               49.88 |
+| Wasserstein_1 |                    0.66 |                  0.38 |        0.28 |               42.76 |
+| Wasserstein_2 |                    0.95 |                  0.48 |        0.47 |               49.46 |
 
 # Citation
 

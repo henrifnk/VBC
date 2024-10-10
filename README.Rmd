@@ -24,13 +24,17 @@ Vine Copula Bias Correction for partially zero-inflated margins (VBC) is a  mult
 
 ## Installation
 
-You can install the development version of VBC from [GitHub](https://github.com/) with:
+You can install the development versions for zero inflation from `kde1d` and `rvinecopulib` before installing the development version of VBC from [GitHub](https://github.com/) with:
 
 ``` r
+# prerequisits
+remotes::install_github("vinecopulib/rvinecopulib@pull-zi")
+remotes::install_github("tnagler/kde1d@dev")
+
 # without vignette
-devtools::install_github("henrifnk/VBC")
+remotes::install_github("henrifnk/VBC")
 # with vignette
-devtools::install_github("henrifnk/VBC", build_vignettes = TRUE)
+remotes::install_github("henrifnk/VBC", build_vignettes = TRUE)
 ```
 
 ## Quick Start
