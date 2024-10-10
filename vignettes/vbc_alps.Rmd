@@ -201,7 +201,7 @@ ggplot(mci2020, aes(x = time)) +
     x = "Time", y = "MCI")
 ```
 
-The average MCI of a corrected time series can be used for the global assessment of the correction. With an median inconsistancy of 0.03, we can assume the weather in winter nights 2019/2020 to be mainly preserved.
+The average MCI of a corrected time series can be used for the global assessment of the correction. With an median inconsistency of 0.03, we can assume the weather in winter nights 2019/2020 to be mainly preserved.
 
 ```{r}
 kable(cbind(median = apply(mci[, 1:5], 2, median),

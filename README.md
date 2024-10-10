@@ -1,14 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Bias Correction by Zero-Inflated Vine Copulas <img src="man/figures/logo.svg" align="right" height="130" alt="" />
+# Bias Correction by Zero-Inflated Vine Copulas <img src="man/figures/logo.svg" align="right" height="139" alt="" />
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 Vine Copula Bias Correction for partially zero-inflated margins (VBC) is
 a multivariate bias correction methodology anchored in vine copula
-theory. For this method, we generalised the margins, the copula and the
+theory. For this method, we generalized the margins, the copula and the
 vine copula density to accommodate mixture distributions and propose an
 extension to the Rosenblatt transform that can handle non-continuous
 pseudo observations. The proposed method is tailored to model
@@ -29,7 +29,7 @@ devtools::install_github("henrifnk/VBC")
 devtools::install_github("henrifnk/VBC", build_vignettes = TRUE)
 ```
 
-## Quickstart
+## Quick Start
 
 We aim to correct CRCM5 climate data for Munich, Germany, for the year
 2010. The data is available in the package as `climate`. We will use the
@@ -77,10 +77,10 @@ wd_pre
 ```
 
 For the correction, we need to specify the type of margins and their
-limits. `"zi"` defines a univariate margins and `"c"` a stricktly
-continous margin. `xmin` specifies the lower bound of the margins. For
-the vine copula modelling, we use the *TLL* family set with no
-truncation on the vine.
+limits. `"zi"` defines a univariate margins and `"c"` a strictly
+continuous margin. `xmin` specifies the lower bound of the margins. For
+the vine copula modeling, we use the *TLL* family set with no truncation
+on the vine.
 
 We can then visually and quantitatively asses the correction in `mp_vbc`
 by comparing the corrected data and the reference data by plotting the
@@ -111,7 +111,7 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_pre,
 | Wasserstein_2 |                    0.22 |                  0.08 |        0.14 |               63.71 |
 
 Further we can quantify the multivariate improvement of our correction
-in terms of the wasserstein distances.
+in terms of the Wasserstein distances.
 
 ``` r
 wd_mvd_post = calc_wasserstein(climate_2010$rp[, -"time"], mp_vbc)
@@ -128,8 +128,8 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
 
 |               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
 |:--------------|------------------------:|----------------------:|------------:|--------------------:|
-| Wasserstein_1 |                    0.66 |                  0.38 |        0.28 |               42.64 |
-| Wasserstein_2 |                    0.95 |                  0.48 |        0.47 |               49.65 |
+| Wasserstein_1 |                    0.66 |                  0.37 |        0.28 |               42.93 |
+| Wasserstein_2 |                    0.95 |                  0.48 |        0.48 |               49.88 |
 
 # Citation
 

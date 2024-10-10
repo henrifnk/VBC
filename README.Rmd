@@ -15,12 +15,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Bias Correction by Zero-Inflated Vine Copulas <img src="man/figures/logo.svg" align="right" height="130" alt="" />
+# Bias Correction by Zero-Inflated Vine Copulas <img src="man/figures/logo.svg" align="right" height="139" alt="" />
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-Vine Copula Bias Correction for partially zero-inflated margins (VBC) is a  multivariate bias correction methodology anchored in vine copula theory. For this method, we generalised the margins, the copula and the vine copula density to accommodate mixture distributions and propose an extension to the Rosenblatt transform that can handle non-continuous pseudo observations. The proposed method is tailored to model dependencies between heavy tailed, zero-inflated and continuous climate variables with high temporal resolution, ensuring precise corrections. Notably, our approach is designed for high interpretability, enabling control and assessment of the results. 
+Vine Copula Bias Correction for partially zero-inflated margins (VBC) is a  multivariate bias correction methodology anchored in vine copula theory. For this method, we generalized the margins, the copula and the vine copula density to accommodate mixture distributions and propose an extension to the Rosenblatt transform that can handle non-continuous pseudo observations. The proposed method is tailored to model dependencies between heavy tailed, zero-inflated and continuous climate variables with high temporal resolution, ensuring precise corrections. Notably, our approach is designed for high interpretability, enabling control and assessment of the results. 
 
 ## Installation
 
@@ -33,7 +33,7 @@ devtools::install_github("henrifnk/VBC")
 devtools::install_github("henrifnk/VBC", build_vignettes = TRUE)
 ```
 
-## Quickstart
+## Quick Start
 
 We aim to correct CRCM5 climate data for Munich, Germany, for the year 2010.
 The data is available in the package as `climate`.
@@ -72,9 +72,9 @@ wd_pre
 ```
 
 For the correction, we need to specify the type of margins and their limits.
-`"zi"` defines a univariate margins and `"c"` a stricktly continous margin.
+`"zi"` defines a univariate margins and `"c"` a strictly continuous margin.
 `xmin` specifies the lower bound of the margins.
-For the vine copula modelling, we use the *TLL* family set with no truncation
+For the vine copula modeling, we use the *TLL* family set with no truncation
 on the vine.
 
 ```{r modelling, echo = FALSE}
@@ -110,7 +110,7 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_pre,
 ```
 
 Further we can quantify the multivariate improvement of our correction in 
-terms of the wasserstein distances.
+terms of the Wasserstein distances.
 
 ```{r}
 wd_mvd_post = calc_wasserstein(climate_2010$rp[, -"time"], mp_vbc)
