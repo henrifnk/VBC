@@ -1,9 +1,9 @@
 ---
-title: "Evaluation of VBC in the Allgäuer Hochalpen"
+title: "VBC in the Alps: Multivariate Bias Correction and Evaluation"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Evaluation of VBC in the Allgäuer Hochalpen}
+  %\VignetteIndexEntry{vbc_alps}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   dpi = 300,
   dev = "png"
 )
+options(timeout = max(300, getOption("timeout")))
 ```
 
 ```{r setup}
@@ -55,10 +56,12 @@ This exemplary showcases the potentials of the VBC package to correct for the bi
 
 -   Funk, H. (2024). Bias Correction of CRCM5-LE for Hydrological Bavaria (1.0.0) [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.13348397>
 
-```{r library_n_data}
-load(
-  url("https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1")
-)
+```{r data}
+temp_file <- tempfile(fileext = ".rda")
+url = "https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"
+download.file(url, temp_file, quiet = TRUE)
+load(temp_file)
+unlink(temp_file)
 ```
 
 ## Bias Correction
