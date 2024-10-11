@@ -12,7 +12,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = FALSE,
   comment = "#>",
-  dpi = 600,
+  dpi = 200,
   dev = "svg",
   fig.align = "center"
 )
@@ -46,7 +46,7 @@ theme = theme(strip.text.y  = element_text(face = "bold"),
 
 The Allgäuer Hochalpen are a mountainous nature reserve in the northern Alps at the border to Austria. With up to 2,600 meters above sea level, the nature reserve is the first northern mountain range in the Alps. Due to this regional exposition, the Allgäuer Hochalpen are known for their high precipitation rates and cold temperatures. The complex topography of the region leads to a high regional climatic variability which is challenging for climate models to simulate.
 
-```{r leaflet-map, echo=FALSE, out.width="100%"}
+```{r leaflet-map, echo=FALSE, height=2, width=3}
 leaflet() %>%
   addTiles() %>%
   setView(lng = 10.4, lat = 47.40, zoom = 10) %>%
@@ -114,7 +114,7 @@ vbc = vbc_tsub(mp = split_mp, mc = mc_dts, rc = oc_dt, t_subs = winter_night,
 
 The bias correction is evaluated by comparing the corrected model data with the reference data `op_dt`. Using `plot_tails`, VBC provides a visual tool to compare the marginal distribution of a climate variable before and after the bias correction with the target reference data. Ideally, the corrected model data should be as close as possible to the reference data.
 
-```{r plot_rsds, fig.height=4, fig.width=8}
+```{r plot_rsds, fig.height=4, fig.width=7}
 plot_tails(mp_dts[hour(time) %in% c(21, 0, 3, 6) &
                     month(time) %in% c(12, 1, 2), ], "dew", scale_d = 5,
            offset = .1) + theme +
@@ -194,7 +194,7 @@ mci$median = apply(mci[, 1:5], 1, median)
 
 The MCI of the first 5 members of the CRCM5-LE during winter nights 2019 is mostly between 0 and 0.1. A MCI of 0 indicates an non-invasive bias correction that did not change the course of the weather patterns from the model data. The MCI is limited at $[0, 1]$ indicating a maximal change in the course of weather.
 
-```{r plot_mci2020, fig.height=3, fig.width=8}
+```{r plot_mci2020, fig.height=3, fig.width=7}
 mci2020 = mci[mci$time > "2019-11-01" & mci$time < "2020-03-01", ]
 ggplot(mci2020, aes(x = time)) +
   geom_line(mapping = aes(y = kba), colour = "lightblue", linewidth = 0.3) +
