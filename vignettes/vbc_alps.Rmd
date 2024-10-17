@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
   dev = "svg",
   fig.align = "center"
 )
-options(timeout = max(300, getOption("timeout")))
+options(timeout = max(300, getOption("timeout")),
+        rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ```{r setup}
@@ -31,14 +32,6 @@ library(leaflet)
 library(patchwork)
 
 theme = theme(strip.text.y  = element_text(face = "bold"),
-              # legend.key.size = unit(0.2, "cm"),
-              # strip.text = element_text(size = 2),
-              # plot.title = element_text(size = 2.5),
-              # plot.caption = element_text(size = 1.5),
-              # axis.title = element_text(size = 1.5),
-              # axis.text = element_text(size = 1.5),
-              # legend.text = element_text(size = 1.5),
-              # legend.title = element_text(size = 1.5),
               panel.grid.minor = element_blank())
 ```
 
