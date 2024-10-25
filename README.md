@@ -61,13 +61,13 @@ distributions of the model data and the reference data using
 quantified using the Wasserstein distance.
 
 ``` r
-plot_tails(climate_2010$mp, "pr", scale_d = 0.2, offset = 3) +
+plot_tails(climate_2010$mp, "pr", scale_d = 0.3, offset = 3, xmin = 0) +
   labs(x = "", title = "Marginal distribution of uncorrected model data") +
-  xlim(c(-1, 15)) + theme(legend.position = "none") +
-  plot_tails(climate_2010$rp, "pr", scale_d = 1.8, offset = 2) +
+  theme(legend.position = "none") +
+  plot_tails(climate_2010$rp, "pr", scale_d = 1, offset = 3, xmin = 0) +
   labs(x = "precipitation (mm/h)",  
        title = "Marginal targeted distribution of reference data") +
-  xlim(c(-1, 15)) + scale_y_continuous(name = "") +
+  scale_y_continuous(name = "") +
   plot_layout(ncol = 1) 
 ```
 
@@ -93,12 +93,16 @@ tails and calculating the Wasserstein distances. The results can be
 compared to those above.
 
 ``` r
-plot_tails(mp_vbc, "pr", scale_d = 1.8, offset = 20) +
+plot_tails(mp_vbc, "pr", scale_d = 1.8, offset = 20, xmin = 0) +
   labs(x = "precipitation (mm/h)",
        title = "Marginal distribution of uncorrected model data")
 ```
 
 <img src="man/figures/README-zi-correction-1.png" width="90%" style="display: block; margin: auto;" />
+
+Visibly, the correction shortens the heavy tail and increases the
+density inflation at zero. This is also reflected in the Wasserstein
+distance.
 
 ``` r
 wd_post = calc_wasserstein(climate_2010$rp[, "pr"], mp_vbc[, "pr"])
@@ -133,19 +137,23 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
 
 |               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
 |:--------------|------------------------:|----------------------:|------------:|--------------------:|
-| Wasserstein_1 |                    0.66 |                  0.38 |        0.28 |               42.76 |
-| Wasserstein_2 |                    0.95 |                  0.48 |        0.47 |               49.46 |
+| Wasserstein_1 |                    0.66 |                  0.37 |        0.28 |               42.96 |
+| Wasserstein_2 |                    0.95 |                  0.48 |        0.48 |               49.89 |
 
 # Citation
 
-If you use `VBC` in a scientific publication, please [cite](TBD) it as:
+If you use `VBC` in a scientific publication, please
+[cite](https://arxiv.org/abs/2410.15931) it as:
 
-    APA Style...
+    Funk, H., Ludwig, R., Kuechenhoff, H., & Nagler, T. (2024). Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas. arXiv preprint arXiv:2410.15931.
 
 BibTeX:
 
 ``` tex
-@InProceedings{
-TBD
+@article{funk2024,
+  title={Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas},
+  author={Funk, Henri and Ludwig, Ralf and Kuechenhoff, Helmut and Nagler, Thomas},
+  journal={arXiv preprint arXiv:2410.15931},
+  year={2024}
 }
 ```

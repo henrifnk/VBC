@@ -15,7 +15,7 @@
 #' inflated variables.
 #' @param offset [numeric]\cr
 #' The offset to be used for the log transformation. Default is `8`. 
-#' Reduce the offset towards 0 if bar and kde curve if the gap between zero 
+#' Reduce the offset towards 0 if the gap between zero 
 #' inflation bar and continuous kde curve is too large. Only used 
 #' for zero inflated variables.
 #' @param length_out [numeric]\cr
@@ -76,12 +76,6 @@ plot_tails = function(data, var, xmin = NA, scale_d = 3, offset = 8,
                          limits = c(0, 0.5)) +
     log_trafo +
     labs(x = var) + 
-    theme_light() +
     theme(strip.text.y  = element_text(face = "bold"),
-          strip.text = element_text(size = 14),
-          axis.title = element_text(size = 12),
-          axis.text = element_text(size = 10),
-          legend.text = element_text(size = 10),
-          legend.title = element_text(size = 12),
           panel.grid.minor = element_blank())
 }

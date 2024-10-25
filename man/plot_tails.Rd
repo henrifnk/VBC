@@ -25,7 +25,7 @@ inflated variables.}
 
 \item{offset}{\link{numeric}\cr
 The offset to be used for the log transformation. Default is \code{8}.
-Reduce the offset towards 0 if bar and kde curve if the gap between zero
+Reduce the offset towards 0 if the gap between zero
 inflation bar and continuous kde curve is too large. Only used
 for zero inflated variables.}
 
