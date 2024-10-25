@@ -64,7 +64,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>VBC in the Alps: Multivariate Bias Correction and Evaluation</h1>
             
-            <h4 data-toc-skip class="date">2024-10-21</h4>
+            <h4 data-toc-skip class="date">2024-10-25</h4>
       
 
       <div class="d-none name"><code>vbc_alps.Rmd</code></div>
@@ -93,7 +93,7 @@ the Alps. Due to this regional exposition, the Allgäuer Hochalpen are
 known for their high precipitation rates and cold temperatures. The
 complex topography of the region leads to a high regional climatic
 variability which is challenging for climate models to simulate.</p>
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:1458.33333333333px;height:901.318500206016px;"></div>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:700px;height:432.632880098888px;"></div>
 <script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[47.4,10.4,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Allgäuer Hochalpen",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]}],"setView":[[47.4,10.4],10,[]],"limits":{"lat":[47.4,47.4],"lng":[10.4,10.4]}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level2">
@@ -111,9 +111,10 @@ data <code>oc_dt</code> is used to correct the model data.
 <code>op_dt</code> contains the targeted distribution in is held out for
 elevation purposes. For more information, see</p>
 <ul>
-<li><p>Funk, H. (2024). Towards more realistic climate models - A
-multivariate bias correction for partly zero-inflated margins based on
-vine copulas.</p></li>
+<li><p>Funk, H., Ludwig, R., Kuechenhoff, H., &amp; Nagler, T. (2024).
+Towards more realistic climate model outputs: A multivariate bias
+correction based on zero-inflated vine copulas. arXiv preprint
+&lt;arXiv:2410.15931&gt;.</p></li>
 <li><p>Lehr- und Forschungseinheit für physische Geographie und komplexe
 Umweltsysteme, &amp; Wood, R. R. (2024). SDCLIREFv2 (Version 2) [Data
 set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13221576" class="external-link uri">https://doi.org/10.5281/zenodo.13221576</a></p></li>
@@ -201,7 +202,7 @@ data should be as close as possible to the reference data.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Dewpoint Temperature in °C"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Reference"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vbc_alps_files/figure-html/plot_rsds-1.png" width="1400" style="display: block; margin: auto;"></p>
+<p><img src="vbc_alps_files/figure-html/plot_rsds-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>To quantify the improvement of the bias correction, we calculate the
 Wasserstein distance between the corrected model data and the reference.
 The Wasserstein distance is a measure of the distance between two
@@ -243,32 +244,32 @@ probability distributions.</p>
 <tr class="odd">
 <td align="left">kba</td>
 <td align="right">2.16</td>
-<td align="right">1.92</td>
+<td align="right">1.91</td>
 <td align="right">0.25</td>
 </tr>
 <tr class="even">
 <td align="left">kbb</td>
 <td align="right">1.43</td>
-<td align="right">1.26</td>
-<td align="right">0.17</td>
+<td align="right">1.25</td>
+<td align="right">0.19</td>
 </tr>
 <tr class="odd">
 <td align="left">kbc</td>
 <td align="right">1.41</td>
-<td align="right">1.23</td>
-<td align="right">0.18</td>
+<td align="right">1.22</td>
+<td align="right">0.19</td>
 </tr>
 <tr class="even">
 <td align="left">kbd</td>
 <td align="right">1.91</td>
-<td align="right">1.83</td>
-<td align="right">0.08</td>
+<td align="right">1.84</td>
+<td align="right">0.07</td>
 </tr>
 <tr class="odd">
 <td align="left">kbe</td>
 <td align="right">2.07</td>
-<td align="right">1.96</td>
-<td align="right">0.11</td>
+<td align="right">1.97</td>
+<td align="right">0.10</td>
 </tr>
 </tbody>
 </table>
@@ -307,26 +308,26 @@ improves the model data for any of the 5 members of the CRCM5-LE.</p>
 <tr class="odd">
 <td align="left">kba</td>
 <td align="right">6.09</td>
-<td align="right">1.13</td>
-<td align="right">4.96</td>
+<td align="right">1.12</td>
+<td align="right">4.97</td>
 </tr>
 <tr class="even">
 <td align="left">kbb</td>
 <td align="right">6.38</td>
-<td align="right">1.16</td>
-<td align="right">5.22</td>
+<td align="right">1.15</td>
+<td align="right">5.23</td>
 </tr>
 <tr class="odd">
 <td align="left">kbc</td>
 <td align="right">6.48</td>
-<td align="right">1.31</td>
-<td align="right">5.17</td>
+<td align="right">1.30</td>
+<td align="right">5.19</td>
 </tr>
 <tr class="even">
 <td align="left">kbd</td>
 <td align="right">6.20</td>
-<td align="right">1.03</td>
-<td align="right">5.17</td>
+<td align="right">1.02</td>
+<td align="right">5.18</td>
 </tr>
 <tr class="odd">
 <td align="left">kbe</td>
@@ -377,7 +378,7 @@ indicating a maximal change in the course of weather.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    caption <span class="op">=</span> <span class="st">"MCI of the first 5 members of the CRCM5-LE (lightblue) and their median (navyblue) during winter nights 2019"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Time"</span>, y <span class="op">=</span> <span class="st">"MCI"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vbc_alps_files/figure-html/plot_mci2020-1.png" width="1400" style="display: block; margin: auto;"></p>
+<p><img src="vbc_alps_files/figure-html/plot_mci2020-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>The average MCI of a corrected time series can be used for the global
 assessment of the correction. With an median inconsistency of 0.03, we
 can assume the weather in winter nights 2019/2020 to be mainly
@@ -395,26 +396,26 @@ preserved.</p>
 <tr class="odd">
 <td align="left">kba</td>
 <td align="right">0.036</td>
-<td align="right">0.059</td>
+<td align="right">0.058</td>
 </tr>
 <tr class="even">
 <td align="left">kbb</td>
 <td align="right">0.030</td>
-<td align="right">0.058</td>
+<td align="right">0.057</td>
 </tr>
 <tr class="odd">
 <td align="left">kbc</td>
-<td align="right">0.029</td>
+<td align="right">0.028</td>
 <td align="right">0.064</td>
 </tr>
 <tr class="even">
 <td align="left">kbd</td>
 <td align="right">0.016</td>
-<td align="right">0.045</td>
+<td align="right">0.046</td>
 </tr>
 <tr class="odd">
 <td align="left">kbe</td>
-<td align="right">0.024</td>
+<td align="right">0.025</td>
 <td align="right">0.054</td>
 </tr>
 </tbody>

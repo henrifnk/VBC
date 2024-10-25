@@ -95,13 +95,13 @@
 <span><span class="va">climate_2010</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">climate</span>, <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">year</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2010</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>Climate data are available in 3-hourly resolution for the variables temperature, precipitation, dew point temperature, radiation and wind speed. The high temporal resolution causes inflation in the variables radiation and precipitation. Visually, check the shape of the marginal distributions of the model data and the reference data using <code>plot_tails</code>. The distance between the two marginal distributions can be quantified using the Wasserstein distance.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">mp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">0.2</span>, offset <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">mp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">0.3</span>, offset <span class="op">=</span> <span class="fl">3</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="st">"Marginal distribution of uncorrected model data"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">rp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1.8</span>, offset <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">rp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1</span>, offset <span class="op">=</span> <span class="fl">3</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"precipitation (mm/h)"</span>,  </span>
 <span>       title <span class="op">=</span> <span class="st">"Marginal targeted distribution of reference data"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html" class="external-link">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">15</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </span></code></pre></div>
 <p><img src="reference/figures/README-zeroinflation-1.png" width="90%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -113,10 +113,11 @@
 <p>For the correction, we need to specify the type of margins and their limits. <code>"zi"</code> defines a univariate margins and <code>"c"</code> a strictly continuous margin. <code>xmin</code> specifies the lower bound of the margins. For the vine copula modeling, we use the <em>TLL</em> family set with no truncation on the vine.</p>
 <p>We can then visually and quantitatively asses the correction in <code>mp_vbc</code> by comparing the corrected data and the reference data by plotting the tails and calculating the Wasserstein distances. The results can be compared to those above.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">mp_vbc</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1.8</span>, offset <span class="op">=</span> <span class="fl">20</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">mp_vbc</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1.8</span>, offset <span class="op">=</span> <span class="fl">20</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"precipitation (mm/h)"</span>,</span>
 <span>       title <span class="op">=</span> <span class="st">"Marginal distribution of uncorrected model data"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-zi-correction-1.png" width="90%" style="display: block; margin: auto;"></p>
+<p>Visibly, the correction shortens the heavy tail and increases the density inflation at zero. This is also reflected in the Wasserstein distance.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wd_post</span> <span class="op">=</span> <span class="fu"><a href="reference/calc_wasserstein.html">calc_wasserstein</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">rp</span><span class="op">[</span>, <span class="st">"pr"</span><span class="op">]</span>, <span class="va">mp_vbc</span><span class="op">[</span>, <span class="st">"pr"</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
@@ -188,16 +189,16 @@
 <tr class="odd">
 <td align="left">Wasserstein_1</td>
 <td align="right">0.66</td>
-<td align="right">0.38</td>
+<td align="right">0.37</td>
 <td align="right">0.28</td>
-<td align="right">42.76</td>
+<td align="right">42.96</td>
 </tr>
 <tr class="even">
 <td align="left">Wasserstein_2</td>
 <td align="right">0.95</td>
 <td align="right">0.48</td>
-<td align="right">0.47</td>
-<td align="right">49.46</td>
+<td align="right">0.48</td>
+<td align="right">49.89</td>
 </tr>
 </tbody>
 </table>
@@ -206,12 +207,15 @@
 <div class="section level1">
 <h1 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h1>
-<p>If you use <code>VBC</code> in a scientific publication, please <a href="TBD">cite</a> it as:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>APA Style...</span></code></pre></div>
+<p>If you use <code>VBC</code> in a scientific publication, please <a href="https://arxiv.org/abs/2410.15931" class="external-link">cite</a> it as:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>Funk, H., Ludwig, R., Kuechenhoff, H., <span class="sc">&amp;</span> Nagler, <span class="fu">T.</span> (<span class="dv">2024</span>). Towards more realistic climate model outputs<span class="sc">:</span> A multivariate bias correction based on zero<span class="sc">-</span>inflated vine copulas. arXiv preprint arXiv<span class="sc">:</span><span class="dv">2410</span>.<span class="fl">15931.</span></span></code></pre></div>
 <p>BibTeX:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode tex"><code class="sourceCode latex"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>@InProceedings{</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>TBD</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode tex"><code class="sourceCode latex"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>@article{funk2024,</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  title={Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas},</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  author={Funk, Henri and Ludwig, Ralf and Kuechenhoff, Helmut and Nagler, Thomas},</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  journal={arXiv preprint arXiv:2410.15931},</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  year={2024}</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 
   </main><aside class="col-md-3"><div class="license">
