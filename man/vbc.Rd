@@ -95,9 +95,9 @@ univariate bias correction via quantile delta mapping.
 #'              climate_2010$rp[, -"time"], margins_controls = margins_controls,
 #'              family_set = "tll", trunc_lvl = Inf)                 
 #' 
-#' plot_tails(climate_2010$mp, "pr", scale_d = 0.2, offset = 3)  
-#' plot_tails(climate_2010$rp, "pr", scale_d = 1.8, offset = 3) 
-#' plot_tails(mp_vbc, "pr", scale_d = 1.8, offset = 20) 
+#' plot_tails(climate_2010$mp, "pr", scale_d = 0.1, mult = 4, xmin = 0) 
+#' plot_tails(climate_2010$rp, "pr", scale_d = 1, mult = 4, xmin = 0)
+#' plot_tails(round(mp_vbc, 3), "pr", scale_d = 1, mult = 3, xmin = 0)
 #' calc_wasserstein(climate_2010$mp[, "pr"], climate_2010$rp[, "pr"])
 #' calc_wasserstein(climate_2010$rp[, "pr"], mp_vbc[, "pr"])
 #' 

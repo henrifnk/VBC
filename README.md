@@ -61,10 +61,10 @@ distributions of the model data and the reference data using
 quantified using the Wasserstein distance.
 
 ``` r
-plot_tails(climate_2010$mp, "pr", scale_d = 0.3, offset = 3, xmin = 0) +
+plot_tails(climate_2010$mp, "pr", scale_d = 0.1, mult = 4, xmin = 0) +
   labs(x = "", title = "Marginal distribution of uncorrected model data") +
   theme(legend.position = "none") +
-  plot_tails(climate_2010$rp, "pr", scale_d = 1, offset = 3, xmin = 0) +
+  plot_tails(climate_2010$rp, "pr", scale_d = 1, mult = 4, xmin = 0) +
   labs(x = "precipitation (mm/h)",  
        title = "Marginal targeted distribution of reference data") +
   scale_y_continuous(name = "") +
@@ -93,9 +93,9 @@ tails and calculating the Wasserstein distances. The results can be
 compared to those above.
 
 ``` r
-plot_tails(mp_vbc, "pr", scale_d = 1.8, offset = 20, xmin = 0) +
+plot_tails(round(mp_vbc, 3), "pr", scale_d = 1, mult = 3, xmin = 0) +
   labs(x = "precipitation (mm/h)",
-       title = "Marginal distribution of uncorrected model data")
+       title = "Marginal distribution of corrected model data")
 ```
 
 <img src="man/figures/README-zi-correction-1.png" width="90%" style="display: block; margin: auto;" />
@@ -114,10 +114,10 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_pre,
       digits = 2)
 ```
 
-|               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
-|:--------------|------------------------:|----------------------:|------------:|--------------------:|
-| Wasserstein_1 |                    0.06 |                  0.02 |        0.04 |               61.41 |
-| Wasserstein_2 |                    0.22 |                  0.08 |        0.14 |               63.71 |
+|  | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
+|:---|---:|---:|---:|---:|
+| Wasserstein_1 | 0.06 | 0.02 | 0.04 | 61.41 |
+| Wasserstein_2 | 0.22 | 0.08 | 0.14 | 63.71 |
 
 Further we can quantify the multivariate improvement of our correction
 in terms of the Wasserstein distances.
@@ -135,10 +135,10 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
       digits = 2)
 ```
 
-|               | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
-|:--------------|------------------------:|----------------------:|------------:|--------------------:|
-| Wasserstein_1 |                    0.66 |                  0.37 |        0.28 |               42.96 |
-| Wasserstein_2 |                    0.95 |                  0.48 |        0.48 |               49.89 |
+|  | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
+|:---|---:|---:|---:|---:|
+| Wasserstein_1 | 0.66 | 0.37 | 0.28 | 43.21 |
+| Wasserstein_2 | 0.95 | 0.48 | 0.47 | 49.66 |
 
 # Citation
 

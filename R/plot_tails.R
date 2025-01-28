@@ -13,11 +13,9 @@
 #' Default is `3`. Regulate the factor, if continuous density estimates and 
 #' relative frequency are too distinct on the y-axis. Only used for zero
 #' inflated variables.
-#' @param offset [numeric]\cr
-#' The offset to be used for the log transformation. Default is `8`. 
-#' Reduce the offset towards 0 if the gap between zero 
-#' inflation bar and continuous kde curve is too large. Only used 
-#' for zero inflated variables.
+#' @param mult [numeric]\cr
+#' Binwidth multiplier. Passed to [kde1d].
+#' Default is 1 indicating no multiplication.
 #' @param length_out [numeric]\cr
 #' The length of the sequence to be used for the density plot. Default is `1e4`.
 #' @return A ggplot that plots the continuous density estimate of the variable 
@@ -25,14 +23,14 @@
 #' @importFrom scales gradient_n_pal trans_new
 #' @import ggplot2
 #' @export
-plot_tails = function(data, var, xmin = NA, scale_d = 3, offset = 8,
+plot_tails = function(data, var, xmin = NA, scale_d = 3, mult = 1,
                       length_out = 1e4) {
   is_inf = sum(data[, get(var) == 0])/ nrow(data) > 0.01
   zero_data = data.table("zero_freq" = data[, sum(get(var) == 0) / .N])
   zero_data[, "x" := 0]
   if(is_inf) {
     xmin = 0
-    seq = seq(from = offset + log(min(data[, get(var)][data[, get(var)] != 0])),
+    seq = seq(from = log(min(data[, get(var)][data[, get(var)] != 0])),
               to = log(max(data[, get(var)])), length.out = length_out)
     seq = exp(seq)
   } else {
@@ -40,7 +38,8 @@ plot_tails = function(data, var, xmin = NA, scale_d = 3, offset = 8,
               length.out = length_out)
   }
   density_plot <- data[get(var) != 0]
-  kde <- kde1d(data[, get(var)], xmin = xmin, type = ifelse(is_inf, "zi", "c"))
+  kde <- kde1d(data[, get(var)], xmin = xmin, type = ifelse(is_inf, "zi", "c"),
+               mult = mult)
   kde_data <- data.table(x = seq)
   kde_data[, `:=`("density" = dkde1d(kde_data$x, kde),
                     "cumulative_density" = pkde1d(kde_data$x, kde)

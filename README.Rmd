@@ -4,8 +4,10 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
+library(knitr)
+opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
@@ -56,16 +58,21 @@ data("climate")
 climate_2010 = lapply(climate, function(data) data[year(time) == 2010, ])
 ```
 
+```{r, include=FALSE, echo=FALSE}
+devtools::load_all()
+```
+
+
 Climate data are available in 3-hourly resolution for the variables temperature, precipitation, dew point temperature, radiation and wind speed.
 The high temporal resolution causes inflation in the variables radiation and precipitation. 
 Visually, check the shape of the marginal distributions of the model data and the reference data using `plot_tails`.
 The distance between the two marginal distributions can be quantified using the Wasserstein distance. 
 
 ```{r zeroinflation, warning=FALSE, message=FALSE}
-plot_tails(climate_2010$mp, "pr", scale_d = 0.3, offset = 3, xmin = 0) +
+plot_tails(climate_2010$mp, "pr", scale_d = 0.1, mult = 4, xmin = 0) +
   labs(x = "", title = "Marginal distribution of uncorrected model data") +
   theme(legend.position = "none") +
-  plot_tails(climate_2010$rp, "pr", scale_d = 1, offset = 3, xmin = 0) +
+  plot_tails(climate_2010$rp, "pr", scale_d = 1, mult = 4, xmin = 0) +
   labs(x = "precipitation (mm/h)",  
        title = "Marginal targeted distribution of reference data") +
   scale_y_continuous(name = "") +
@@ -98,9 +105,9 @@ The results can be compared to those above.
 
 
 ```{r zi-correction, warning=FALSE, message=FALSE, fig.height=2.5}
-plot_tails(mp_vbc, "pr", scale_d = 1.8, offset = 20, xmin = 0) +
+plot_tails(round(mp_vbc, 3), "pr", scale_d = 1, mult = 3, xmin = 0) +
   labs(x = "precipitation (mm/h)",
-       title = "Marginal distribution of uncorrected model data")
+       title = "Marginal distribution of corrected model data")
 ```
 
 Visibly, the correction shortens the heavy tail and increases the density inflation at zero.

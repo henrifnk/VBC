@@ -93,7 +93,6 @@ The function now efficiently corrects the model data for each temporal subset in
 margins_controls = list(
   xmin = c(NaN, 0, NaN, 0, 0), type = c("c", "zi", "c", "zi", "c")
 )
-
 vbc = vbc_tsub(mp = split_mp, mc = mc_dts, rc = oc_dt, t_subs = winter_night,
                margins_controls = margins_controls, family_set = "tll",
                trunc_lvl = Inf)
@@ -108,14 +107,14 @@ The bias correction is evaluated by comparing the corrected model data with the 
 ```{r plot_rsds, fig.height=4, fig.width=7}
 plot_tails(mp_dts[hour(time) %in% c(21, 0, 3, 6) &
                     month(time) %in% c(12, 1, 2), ], "dew", scale_d = 5,
-           offset = .1) + theme +
+           mult = 1) + theme +
   ggtitle("Pre-Correction") + ylab("") + xlab("") +
   theme(legend.position = "none") +
-  plot_tails(rbindlist(vbc), "dew", scale_d = 5, offset = 1) + theme +
+  plot_tails(rbindlist(vbc), "dew", scale_d = 5, mult = 1) + theme +
   ggtitle("Post-Correction") + xlab("") +
   plot_tails(op_dt[hour(time) %in% c(21, 0, 3, 6) &
                      month(time) %in% c(12, 1, 2), ], "dew", scale_d = 5,
-             offset = 1) + theme + ylab("") + 
+             mult = 1) + theme + ylab("") + 
   xlab("Dewpoint Temperature in °C") +
   ggtitle("Reference") + theme(legend.position = "none") +
   plot_layout(ncol = 1)

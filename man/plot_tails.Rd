@@ -4,7 +4,7 @@
 \alias{plot_tails}
 \title{Plot Tails}
 \usage{
-plot_tails(data, var, xmin = NA, scale_d = 3, offset = 8, length_out = 10000)
+plot_tails(data, var, xmin = NA, scale_d = 3, mult = 1, length_out = 10000)
 }
 \arguments{
 \item{data}{\link{data.table}\cr
@@ -23,11 +23,9 @@ Default is \code{3}. Regulate the factor, if continuous density estimates and
 relative frequency are too distinct on the y-axis. Only used for zero
 inflated variables.}
 
-\item{offset}{\link{numeric}\cr
-The offset to be used for the log transformation. Default is \code{8}.
-Reduce the offset towards 0 if the gap between zero
-inflation bar and continuous kde curve is too large. Only used
-for zero inflated variables.}
+\item{mult}{\link{numeric}\cr
+Binwidth multiplier. Passed to \link{kde1d}.
+Default is 1 indicating no multiplication.}
 
 \item{length_out}{\link{numeric}\cr
 The length of the sequence to be used for the density plot. Default is \code{1e4}.}
