@@ -6,20 +6,13 @@
 #' @param rcu [data.table]\cr
 #' Observed data from [vbc()].
 #' 
-#' @param z_inf `logical(1)`\cr
-#' If `TRUE` at least one margin is zero inflated.
-#' 
 #' @return Corrected data by Rosenblatt transformation.
-correct_rosenblatt <- function(mpu, rcu, z_inf = FALSE) {
+correct_rosenblatt <- function(mpu, rcu) {
   mp_vine <- attr(mpu, "vine")
+  len = length(mp_vine$var_types)
   rc_vine <- attr(rcu, "vine")
   rc_kde <- attr(rcu, "kde")
-  if(z_inf) {
-    mpu_m <- as.matrix(mpu)
-    u = rosenblatt_discrete(mpu_m, mp_vine)
-  } else {
-    u = rosenblatt(mpu, mp_vine)
-  }
+  u = rosenblatt(mpu, mp_vine)
   u <- pseudo_obs(u, ties_method = 'average')
   u_mph = inverse_rosenblatt(u, rc_vine)
   u_mph <- pseudo_obs(u_mph, ties_method = 'average')

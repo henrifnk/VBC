@@ -87,7 +87,7 @@ vbc <- function(mp, mc, rc, var_names = colnames(rc), margins_controls = list(
   mpu <- model_vine(mp, margins_controls, ...)
   rcu <- model_vine(rc, margins_controls, ...)
   attr(rcu, "vine")$var_types = rep("c", times = ncol(mp))
-  x_mph <- correct_rosenblatt(mpu, rcu, any(margins_controls$type == "zi"))
+  x_mph <- correct_rosenblatt(mpu, rcu)
   xmin = if(length(margins_controls$xmin) != ncol(rc)) {
     rep(NA, times = ncol(rc))
   } else {
@@ -146,7 +146,7 @@ vbc_ensemble <- function(mp, mc, rc, var_names, margins_controls, time_mp, ...) 
   attr(rcu, "vine")$var_types = rep("c", times = ncol(rc))
   lapply(mp, function(member){
     mpu <- model_vine(member, margins_controls, ...)
-    x_mph <- correct_rosenblatt(mpu, rcu, any(margins_controls$type == "zi"))
+    x_mph <- correct_rosenblatt(mpu, rcu)
     xmin = if(length(margins_controls$xmin) != ncol(rc)) {
       rep(NA, times = ncol(rc))
     } else {

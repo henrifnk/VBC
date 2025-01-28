@@ -4,7 +4,7 @@
 \alias{correct_rosenblatt}
 \title{Correct data by Rosenblatt transformation}
 \usage{
-correct_rosenblatt(mpu, rcu, z_inf = FALSE)
+correct_rosenblatt(mpu, rcu)
 }
 \arguments{
 \item{mpu}{\link{data.table}\cr
@@ -12,9 +12,6 @@ Model data from \code{\link[=vbc]{vbc()}}.}
 
 \item{rcu}{\link{data.table}\cr
 Observed data from \code{\link[=vbc]{vbc()}}.}
-
-\item{z_inf}{\code{logical(1)}\cr
-If \code{TRUE} at least one margin is zero inflated.}
 }
 \value{
 Corrected data by Rosenblatt transformation.

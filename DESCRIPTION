@@ -32,9 +32,6 @@ Suggests:
     leaflet,
     knitr,
     rmarkdown
-Remotes:
-    vinecopulib/rvinecopulib@pull-zi,
-    tnagler/kde1d@dev
 Config/testthat/edition: 3
 Language: en-US
 Depends: 
