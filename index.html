@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Vine Copula based Bias Correction for Climate Models">
 <meta name="description" content="VBC implements a method to correct the bias in simulated climate data with observed data while preserving the internal variability of the model. To evaluate the method and compare it with others, several post hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
 <meta property="og:description" content="VBC implements a method to correct the bias in simulated climate data with observed data while preserving the internal variability of the model. To evaluate the method and compare it with others, several post hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
@@ -92,13 +92,13 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"climate"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">climate_2010</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">climate</span>, <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">year</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2010</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">climate_2010</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">climate</span>, <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/data.table/man/IDateTime.html" class="external-link">year</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2010</span>, <span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>Climate data are available in 3-hourly resolution for the variables temperature, precipitation, dew point temperature, radiation and wind speed. The high temporal resolution causes inflation in the variables radiation and precipitation. Visually, check the shape of the marginal distributions of the model data and the reference data using <code>plot_tails</code>. The distance between the two marginal distributions can be quantified using the Wasserstein distance.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">mp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">0.3</span>, offset <span class="op">=</span> <span class="fl">3</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">mp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">0.1</span>, mult <span class="op">=</span> <span class="fl">4</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="st">"Marginal distribution of uncorrected model data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">rp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1</span>, offset <span class="op">=</span> <span class="fl">3</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">climate_2010</span><span class="op">$</span><span class="va">rp</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1</span>, mult <span class="op">=</span> <span class="fl">4</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"precipitation (mm/h)"</span>,  </span>
 <span>       title <span class="op">=</span> <span class="st">"Marginal targeted distribution of reference data"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
@@ -113,9 +113,9 @@
 <p>For the correction, we need to specify the type of margins and their limits. <code>"zi"</code> defines a univariate margins and <code>"c"</code> a strictly continuous margin. <code>xmin</code> specifies the lower bound of the margins. For the vine copula modeling, we use the <em>TLL</em> family set with no truncation on the vine.</p>
 <p>We can then visually and quantitatively asses the correction in <code>mp_vbc</code> by comparing the corrected data and the reference data by plotting the tails and calculating the Wasserstein distances. The results can be compared to those above.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">mp_vbc</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1.8</span>, offset <span class="op">=</span> <span class="fl">20</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">mp_vbc</span>, <span class="fl">3</span><span class="op">)</span>, <span class="st">"pr"</span>, scale_d <span class="op">=</span> <span class="fl">1</span>, mult <span class="op">=</span> <span class="fl">3</span>, xmin <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"precipitation (mm/h)"</span>,</span>
-<span>       title <span class="op">=</span> <span class="st">"Marginal distribution of uncorrected model data"</span><span class="op">)</span></span></code></pre></div>
+<span>       title <span class="op">=</span> <span class="st">"Marginal distribution of corrected model data"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-zi-correction-1.png" width="90%" style="display: block; margin: auto;"></p>
 <p>Visibly, the correction shortens the heavy tail and increases the density inflation at zero. This is also reflected in the Wasserstein distance.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -126,13 +126,13 @@
 <span>                 <span class="st">"Improvement"</span> <span class="op">=</span> <span class="va">wd_pre</span> <span class="op">-</span> <span class="va">wd_post</span>,</span>
 <span>                 <span class="st">"Improvement_in_Perc"</span> <span class="op">=</span> <span class="op">(</span><span class="va">wd_pre</span> <span class="op">-</span> <span class="va">wd_post</span><span class="op">)</span> <span class="op">/</span> <span class="va">wd_pre</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span>,</span>
 <span>      digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="15%">
-<col width="25%">
-<col width="23%">
-<col width="13%">
-<col width="21%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
 </colgroup>
 <thead><tr class="header">
 <th align="left"></th>
@@ -170,13 +170,13 @@
 <span>                 <span class="st">"Improvement"</span> <span class="op">=</span> <span class="va">iprovement</span>,</span>
 <span>                 <span class="st">"Improvement_in_Perc"</span> <span class="op">=</span> <span class="va">iprovement</span> <span class="op">/</span> <span class="va">wd_mvd_pre</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span>,</span>
 <span>      digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="15%">
-<col width="25%">
-<col width="23%">
-<col width="13%">
-<col width="21%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
 </colgroup>
 <thead><tr class="header">
 <th align="left"></th>
@@ -191,14 +191,14 @@
 <td align="right">0.66</td>
 <td align="right">0.37</td>
 <td align="right">0.28</td>
-<td align="right">42.96</td>
+<td align="right">43.21</td>
 </tr>
 <tr class="even">
 <td align="left">Wasserstein_2</td>
 <td align="right">0.95</td>
 <td align="right">0.48</td>
-<td align="right">0.48</td>
-<td align="right">49.89</td>
+<td align="right">0.47</td>
+<td align="right">49.66</td>
 </tr>
 </tbody>
 </table>
