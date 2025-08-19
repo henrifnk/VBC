@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   vbc_alps: vbc_alps.html
-last_built: 2025-08-19T14:46Z
+last_built: 2025-08-19T15:01Z
 urls:
   reference: https://henrifnk.github.io/VBC/reference
   article: https://henrifnk.github.io/VBC/articles
