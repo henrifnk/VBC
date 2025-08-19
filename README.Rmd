@@ -54,7 +54,7 @@ library(data.table)
 library(ggplot2)
 library(knitr)
 library(patchwork)
-#library(VBC)
+library(VBC)
 
 data("climate")
 
@@ -62,7 +62,7 @@ climate_2010 = lapply(climate, function(data) data[year(time) == 2010, ])
 ```
 
 ```{r, include=FALSE, echo=FALSE}
-devtools::load_all()
+#devtools::load_all()
 ```
 
 

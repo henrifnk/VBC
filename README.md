@@ -41,7 +41,7 @@ library(data.table)
 library(ggplot2)
 library(knitr)
 library(patchwork)
-#library(VBC)
+library(VBC)
 
 data("climate")
 
@@ -133,8 +133,8 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
 
 |  | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
 |:---|---:|---:|---:|---:|
-| Wasserstein_1 | 0.66 | 0.37 | 0.28 | 43.41 |
-| Wasserstein_2 | 0.95 | 0.48 | 0.48 | 50.01 |
+| Wasserstein_1 | 0.66 | 0.37 | 0.29 | 43.68 |
+| Wasserstein_2 | 0.95 | 0.47 | 0.48 | 50.21 |
 
 # Citation
 
