@@ -7,17 +7,19 @@
 
 <!-- badges: end -->
 
-Vine Copula Bias Correction for partially zero-inflated margins (VBC) is
-a multivariate bias correction methodology anchored in vine copula
-theory. For this method, we generalized the margins, the copula and the
-vine copula density to accommodate mixture distributions and propose an
-extension to the Rosenblatt transform that can handle non-continuous
-pseudo observations. The proposed method is tailored to model
-dependencies between heavy tailed, zero-inflated and continuous climate
-variables with high temporal resolution, ensuring precise corrections.
-Notably, our approach is designed for high interpretability, enabling
-control and assessment of the results. For technical details, please
-refer to the [paper](https://doi.org/10.1093/jrsssc/qlaf044).
+**Vine Copula Bias Correction (VBC)** is a multivariate bias correction
+methodology grounded in vine copula theory. The method generalizes
+marginal distributions, copulas, and vine copula densities to
+accommodate mixture distributions, and extends the Rosenblatt transform
+to handle non-continuous pseudo-observations. This allows VBC to model
+dependencies among **heavy-tailed, zero-inflated, and continuous**
+climate variables at high temporal resolution, providing more accurate
+and robust corrections.
+
+A key feature of VBC is its **interpretability**: users can
+transparently control the correction process and assess the outcomes
+using built-in diagnostics. For the full methodological details, please
+see our [paper](https://doi.org/10.1093/jrsssc/qlaf044).
 
 ## Installation
 
@@ -131,8 +133,8 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
 
 |  | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
 |:---|---:|---:|---:|---:|
-| Wasserstein_1 | 0.66 | 0.37 | 0.29 | 43.48 |
-| Wasserstein_2 | 0.95 | 0.48 | 0.48 | 50.02 |
+| Wasserstein_1 | 0.66 | 0.37 | 0.29 | 43.46 |
+| Wasserstein_2 | 0.95 | 0.48 | 0.48 | 50.07 |
 
 # Citation
 
