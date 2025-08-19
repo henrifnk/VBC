@@ -20,7 +20,7 @@ a kernel density estimation of the climate variable in projection period.}
 a kernel density estimation of the climate variable in calibration period.}
 
 \item{xmin}{double(1)\cr
-A vector indicating if xmin is a ratio variable type or any other type (NA).}
+A vector indicating if \code{xmin} is a ratio variable type or any other type (NA).}
 }
 \value{
 A climate variable that is corrected by the climate trend in the

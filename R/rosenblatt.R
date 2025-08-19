@@ -1,7 +1,3 @@
-
-#' 
-#' 
-#' 
 rosenblatt <- function(x, model, cores = 1, randomize_discrete = TRUE) {
   assertthat::assert_that(
     inherits(model, c("bicop_dist", "vinecop_dist", "vine_dist")),

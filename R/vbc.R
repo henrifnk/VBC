@@ -80,6 +80,10 @@ vbc <- function(mp, mc, rc, var_names = colnames(rc), margins_controls = list(
   mult = NULL, xmin = NaN, xmax = NaN, bw = NA, deg = 2, type = "c"
 ), time_mp = NA, ...) {
   check_vbc_args(mp, mc, rc, var_names)
+  if(ncol(mc != length(margins_controls[["type"]]))) {
+    margins_controls <- expand_margin_controls(margins_controls, mc)
+  }
+  
   if(!is.data.frame(mp) & is.list(mp)) {
     return(vbc_ensemble(mp, mc, rc, var_names, margins_controls, time_mp, ...))
   }
@@ -103,7 +107,7 @@ vbc <- function(mp, mc, rc, var_names = colnames(rc), margins_controls = list(
   attr(xproj, "vine_mp") <- attr(mpu, "vine")
   attr(xproj, "kde_mp") <- attr(mpu, "kde")
   class(xproj) <- c("vbc", class(xproj))
-  if(!is.na(time_mp)) {
+  if(any(!is.na(time_mp))) {
     xproj[, "time" := time_mp]
   }
   xproj

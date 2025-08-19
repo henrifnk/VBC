@@ -10,7 +10,6 @@
 #' @return A data frame with the marginal PIT.
 estimate_margins = function(dta, margins_controls, kde = NULL) {
   if (is.null(kde)) {
-    margins_controls <- expand_margin_controls(margins_controls, dta)
     kde <- mapply(kde1d, x = dta, mult = margins_controls$mult,
                   xmin = margins_controls$xmin, xmax = margins_controls$xmax,
                   bw = margins_controls$bw, deg = margins_controls$deg,

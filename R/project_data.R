@@ -15,7 +15,7 @@
 #' @param mc_kde [kde1d::kde1d]\cr
 #'  a kernel density estimation of the climate variable in calibration period.
 #' @param xmin double(1)\cr
-#'  A vector indicating if xmin is a ratio variable type or any other type (NA).
+#'  A vector indicating if `xmin` is a ratio variable type or any other type (NA).
 #' @return A climate variable that is corrected by the climate trend in the
 #' model between correction and projection period.
 map_delta <- function(mp, mph, mp_kde, mc_kde, xmin = NA) {

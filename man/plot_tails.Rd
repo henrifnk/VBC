@@ -24,7 +24,7 @@ relative frequency are too distinct on the y-axis. Only used for zero
 inflated variables.}
 
 \item{mult}{\link{numeric}\cr
-Binwidth multiplier. Passed to \link{kde1d}.
+Bin width multiplier. Passed to \link{kde1d}.
 Default is 1 indicating no multiplication.}
 
 \item{length_out}{\link{numeric}\cr

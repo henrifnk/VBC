@@ -14,7 +14,7 @@
 #' relative frequency are too distinct on the y-axis. Only used for zero
 #' inflated variables.
 #' @param mult [numeric]\cr
-#' Binwidth multiplier. Passed to [kde1d].
+#' Bin width multiplier. Passed to [kde1d].
 #' Default is 1 indicating no multiplication.
 #' @param length_out [numeric]\cr
 #' The length of the sequence to be used for the density plot. Default is `1e4`.
