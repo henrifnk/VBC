@@ -175,6 +175,11 @@ subset_time <- function(data, hrs, mnt, overlap = 1) {
   idx <- which(hour(time) %in% hrs_over & month(time) %in% mnt_over)
   final_idx <- which(hour(time) %in% hrs & month(time) %in% mnt)
   data_sub <- data[idx, ]
+  #browser()
+  # stop if no data is selected
+  assert_that(nrow(data_sub) > 0,
+              msg = paste("no data selected for hours ", hrs,
+                          " and months ", mnt))
   data_sub$time <- NULL
   attr(data_sub, "final_idx") <- final_idx
   attr(data_sub, "idx") <- idx

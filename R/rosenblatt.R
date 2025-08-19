@@ -4,6 +4,19 @@
 #' pseudo-observations into the original scale of the data, preserving the
 #' copula structure. Adapted from [rvinecopulib::rosenblatt()] and
 #' [rvinecopulib::inverse_rosenblatt()].
+#' 
+#' @param x A numeric matrix or data.frame of observations. If not on \eqn{[0,1]^d},
+#'   they will be converted via \code{rvinecopulib::pseudo_obs()} unless already
+#'   provided as pseudo-observations.
+#' @param model A \code{vinecop} object (from \pkg{rvinecopulib}) describing the
+#'   dependence structure.
+#' @param randomize_discrete Logical; if \code{TRUE}, apply jittering/randomized
+#'   PIT for discrete/mixture margins (Rosenblatt for non-continuous margins).
+#'   Default: \code{FALSE}.
+#' @param cores Integer; number of threads to use. Default: \code{1}.
+#' @return A numeric matrix of the same dimension as \code{x}, containing
+#'   PIT-transformed values in \eqn{[0,1]}.
+#'
 #' @importFrom assertthat assert_that is.number
 rosenblatt <- function(x, model, cores = 1, randomize_discrete = TRUE) {
   assert_that(
