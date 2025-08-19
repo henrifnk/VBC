@@ -4,17 +4,18 @@ Version: 1.0.0
 Authors@R: 
     person("Henri", "Funk", , "H.Funk@lmu.de", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0007-0949-8385"))
-Description:
-    A vine copula–based approach for bias correction of high-resolution climate
-    model data using observations. The method corrects systematic biases while
-    explicitly preserving the internal variability of the climate model. It is
-    tailored for multivariate climate variables at fine temporal scales, 
-    including those with zero-inflation such as precipitation or radiation. To
-    facilitate evaluation and comparison with alternative correction techniques,
-    the package provides several post-hoc diagnostic measures. These include the
-    Model Concordance Index (MCI), which quantifies how well the rank structure
-    of the original model data is preserved, and Wasserstein metrics, which 
-    assess the distributional distance between corrected and observed data.
+Description:A vine copula–based approach for bias correction of
+    high-resolution climate model data using observations. The method
+    corrects systematic biases while explicitly preserving the internal
+    variability of the climate model. It is tailored for multivariate
+    climate variables at fine temporal scales, including those with
+    zero-inflation such as precipitation or radiation. To facilitate
+    evaluation and comparison with alternative correction techniques, the
+    package provides several post-hoc diagnostic measures. These include
+    the Model Concordance Index (MCI), which quantifies how well the rank
+    structure of the original model data is preserved, and Wasserstein
+    metrics, which assess the distributional distance between corrected
+    and observed data.
 License: LGPL-3
 URL: https://henrifnk.github.io/VBC/
 Depends: 
