@@ -16,8 +16,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Vine Copula based Bias Correction for Climate Models">
-<meta name="description" content="VBC implements a method to correct the bias in simulated climate data with observed data while preserving the internal variability of the model. To evaluate the method and compare it with others, several post hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
-<meta property="og:description" content="VBC implements a method to correct the bias in simulated climate data with observed data while preserving the internal variability of the model. To evaluate the method and compare it with others, several post hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
+<meta name="description" content="A vine copula based method to correct the bias in high-resolution climate data with observed data while preserving the internal variability of a climate model. The method is designed for multivariate climate data at high temporal resolution. Therefore, climate variables like precipitation and radiation may contain zero-inflation. To evaluate and compare the method with others, several post-hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
+<meta property="og:description" content="A vine copula based method to correct the bias in high-resolution climate data with observed data while preserving the internal variability of a climate model. The method is designed for multivariate climate data at high temporal resolution. Therefore, climate variables like precipitation and radiation may contain zero-inflation. To evaluate and compare the method with others, several post-hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
 <meta property="og:image" content="https://henrifnk.github.io/VBC/logo.svg">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">VBC</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,17 +63,12 @@
 </div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>Vine Copula Bias Correction for partially zero-inflated margins (VBC) is a multivariate bias correction methodology anchored in vine copula theory. For this method, we generalized the margins, the copula and the vine copula density to accommodate mixture distributions and propose an extension to the Rosenblatt transform that can handle non-continuous pseudo observations. The proposed method is tailored to model dependencies between heavy tailed, zero-inflated and continuous climate variables with high temporal resolution, ensuring precise corrections. Notably, our approach is designed for high interpretability, enabling control and assessment of the results.</p>
+<p>Vine Copula Bias Correction for partially zero-inflated margins (VBC) is a multivariate bias correction methodology anchored in vine copula theory. For this method, we generalized the margins, the copula and the vine copula density to accommodate mixture distributions and propose an extension to the Rosenblatt transform that can handle non-continuous pseudo observations. The proposed method is tailored to model dependencies between heavy tailed, zero-inflated and continuous climate variables with high temporal resolution, ensuring precise corrections. Notably, our approach is designed for high interpretability, enabling control and assessment of the results. For technical details, please refer to the <a href="https://doi.org/10.1093/jrsssc/qlaf044" class="external-link">paper</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development versions for zero inflation from <code>kde1d</code> and <code>rvinecopulib</code> before installing the development version of VBC from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># prerequisits</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"vinecopulib/rvinecopulib@pull-zi"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"tnagler/kde1d@dev"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># without vignette</span></span>
+<code class="sourceCode R"><span><span class="co"># without vignette</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"henrifnk/VBC"</span><span class="op">)</span></span>
 <span><span class="co"># with vignette</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"henrifnk/VBC"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
@@ -87,7 +82,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://henrifnk.github.io/VBC/">VBC</a></span><span class="op">)</span></span>
+<span><span class="co">#library(VBC)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"climate"</span><span class="op">)</span></span>
 <span></span>
@@ -189,15 +184,15 @@
 <td align="left">Wasserstein_1</td>
 <td align="right">0.66</td>
 <td align="right">0.37</td>
-<td align="right">0.28</td>
-<td align="right">43.21</td>
+<td align="right">0.29</td>
+<td align="right">43.48</td>
 </tr>
 <tr class="even">
 <td align="left">Wasserstein_2</td>
 <td align="right">0.95</td>
 <td align="right">0.48</td>
-<td align="right">0.47</td>
-<td align="right">49.66</td>
+<td align="right">0.48</td>
+<td align="right">50.02</td>
 </tr>
 </tbody>
 </table>
@@ -206,15 +201,21 @@
 <div class="section level1">
 <h1 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h1>
-<p>If you use <code>VBC</code> in a scientific publication, please <a href="https://arxiv.org/abs/2410.15931" class="external-link">cite</a> it as:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>Funk, H., Ludwig, R., Kuechenhoff, H., <span class="sc">&amp;</span> Nagler, <span class="fu">T.</span> (<span class="dv">2024</span>). Towards more realistic climate model outputs<span class="sc">:</span> A multivariate bias correction based on zero<span class="sc">-</span>inflated vine copulas. arXiv preprint arXiv<span class="sc">:</span><span class="dv">2410</span>.<span class="fl">15931.</span></span></code></pre></div>
+<p>If you use <code>VBC</code> in a scientific publication, please <a href="https://doi.org/10.1093/jrsssc/qlaf044" class="external-link">cite</a> it as:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>Henri Funk, Ralf Ludwig, Helmut Küchenhoff, Thomas Nagler, Towards more realistic climate model outputs<span class="sc">:</span> a multivariate bias correction based on zero<span class="sc">-</span>inflated vine copulas, Journal of the Royal Statistical Society Series C<span class="sc">:</span> Applied Statistics, <span class="dv">2025</span>;, qlaf044, https<span class="sc">:</span><span class="er">//</span>doi.org<span class="sc">/</span><span class="fl">10.1093</span><span class="sc">/</span>jrsssc<span class="sc">/</span>qlaf044</span></code></pre></div>
 <p>BibTeX:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode tex"><code class="sourceCode latex"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>@article{funk2024,</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  title={Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas},</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  author={Funk, Henri and Ludwig, Ralf and Kuechenhoff, Helmut and Nagler, Thomas},</span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  journal={arXiv preprint arXiv:2410.15931},</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  year={2024}</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode tex"><code class="sourceCode latex"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>@article{funk2025,</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>    author = {Funk, Henri and Ludwig, Ralf and Küchenhoff, Helmut and Nagler, Thomas},</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    title = {Towards more realistic climate model outputs: a multivariate bias correction based on zero-inflated vine copulas},</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    journal = {Journal of the Royal Statistical Society Series C: Applied Statistics},</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    pages = {qlaf044},</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    year = {2025},</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    month = {08},</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>    issn = {0035-9254},</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>    doi = {10.1093/jrsssc/qlaf044},</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>    url = {https://doi.org/10.1093/jrsssc/qlaf044},</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>    eprint = {https://academic.oup.com/jrsssc/advance-article-pdf/doi/10.1093/jrsssc/qlaf044/64045829/qlaf044.pdf},</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 
   </main><aside class="col-md-3"><div class="license">
