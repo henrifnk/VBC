@@ -16,8 +16,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Vine Copula based Bias Correction for Climate Models">
-<meta name="description" content="A vine copula based method to correct the bias in high-resolution climate data with observed data while preserving the internal variability of a climate model. The method is designed for multivariate climate data at high temporal resolution. Therefore, climate variables like precipitation and radiation may contain zero-inflation. To evaluate and compare the method with others, several post-hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
-<meta property="og:description" content="A vine copula based method to correct the bias in high-resolution climate data with observed data while preserving the internal variability of a climate model. The method is designed for multivariate climate data at high temporal resolution. Therefore, climate variables like precipitation and radiation may contain zero-inflation. To evaluate and compare the method with others, several post-hoc diagnostic measures are provided. The MCI is a measure to evaluate how well the correction method preserved the rank structure of model data. Wasserstein metrics can be calculated to determine, how distant the distributions of corrected and measured data are.">
+<meta name="description" content="A vine copula–based approach for bias correction of high-resolution climate model data using observations. The method corrects systematic biases while explicitly preserving the internal variability of the climate model. It is tailored for multivariate climate variables at fine temporal scales, including those with zero-inflation such as precipitation or radiation. To facilitate evaluation and comparison with alternative correction techniques, the package provides several post-hoc diagnostic measures. These include the Model Concordance Index (MCI), which quantifies how well the rank structure of the original model data is preserved, and Wasserstein metrics, which assess the distributional distance between corrected and observed data.">
+<meta property="og:description" content="A vine copula–based approach for bias correction of high-resolution climate model data using observations. The method corrects systematic biases while explicitly preserving the internal variability of the climate model. It is tailored for multivariate climate variables at fine temporal scales, including those with zero-inflation such as precipitation or radiation. To facilitate evaluation and comparison with alternative correction techniques, the package provides several post-hoc diagnostic measures. These include the Model Concordance Index (MCI), which quantifies how well the rank structure of the original model data is preserved, and Wasserstein metrics, which assess the distributional distance between corrected and observed data.">
 <meta property="og:image" content="https://henrifnk.github.io/VBC/logo.svg">
 </head>
 <body>
@@ -63,7 +63,8 @@
 </div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>Vine Copula Bias Correction for partially zero-inflated margins (VBC) is a multivariate bias correction methodology anchored in vine copula theory. For this method, we generalized the margins, the copula and the vine copula density to accommodate mixture distributions and propose an extension to the Rosenblatt transform that can handle non-continuous pseudo observations. The proposed method is tailored to model dependencies between heavy tailed, zero-inflated and continuous climate variables with high temporal resolution, ensuring precise corrections. Notably, our approach is designed for high interpretability, enabling control and assessment of the results. For technical details, please refer to the <a href="https://doi.org/10.1093/jrsssc/qlaf044" class="external-link">paper</a>.</p>
+<p><strong>Vine Copula Bias Correction (VBC)</strong> is a multivariate bias correction methodology grounded in vine copula theory. The method generalizes marginal distributions, copulas, and vine copula densities to accommodate mixture distributions, and extends the Rosenblatt transform to handle non-continuous pseudo-observations. This allows VBC to model dependencies among <strong>heavy-tailed, zero-inflated, and continuous</strong> climate variables at high temporal resolution, providing more accurate and robust corrections.</p>
+<p>A key feature of VBC is its <strong>interpretability</strong>: users can transparently control the correction process and assess the outcomes using built-in diagnostics. For the full methodological details, please see our <a href="https://doi.org/10.1093/jrsssc/qlaf044" class="external-link">paper</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -184,15 +185,15 @@
 <td align="left">Wasserstein_1</td>
 <td align="right">0.66</td>
 <td align="right">0.37</td>
-<td align="right">0.29</td>
-<td align="right">43.48</td>
+<td align="right">0.28</td>
+<td align="right">43.41</td>
 </tr>
 <tr class="even">
 <td align="left">Wasserstein_2</td>
 <td align="right">0.95</td>
 <td align="right">0.48</td>
 <td align="right">0.48</td>
-<td align="right">50.02</td>
+<td align="right">50.01</td>
 </tr>
 </tbody>
 </table>
