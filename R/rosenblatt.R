@@ -2,8 +2,7 @@
 #' @description
 #' The Rosenblatt transformation is a method to transform uniform 
 #' pseudo-observations into the original scale of the data, preserving the
-#' copula structure. Adapted from [rvinecopulib::rosenblatt()] and
-#' [rvinecopulib::inverse_rosenblatt()].
+#' copula structure. Adapted from [rvinecopulib::rosenblatt()].
 #' 
 #' @param x A numeric matrix or data.frame of observations. If not on \eqn{[0,1]^d},
 #'   they will be converted via \code{rvinecopulib::pseudo_obs()} unless already
@@ -52,6 +51,18 @@ rosenblatt <- function(x, model, cores = 1, randomize_discrete = TRUE) {
   x
 }
 
+#' Inverse Rosenblatt transformation
+#' @description
+#' The inverse Rosenblatt transformation is used to transform uniform
+#' pseudo-observations back to the original scale of the data, preserving the
+#' copula structure. Adapted from [rvinecopulib::inverse_rosenblatt()].
+#' 
+#' @param u A numeric matrix or data.frame of pseudo-observations in \eqn{[0,1]^d}.
+#' @param model A \code{vinecop} object (from \pkg{rvinecopulib}) describing the
+#'  dependence structure.
+#' @param cores Integer; number of threads to use. Default: \code{1}.
+#' @return A numeric matrix of the same dimension as \code{u}, containing
+#'  transformed values in the original scale of the data.
 inverse_rosenblatt <- function(u, model, cores = 1) {
   assert_that(
     all((u > 0) & (u < 1)),
