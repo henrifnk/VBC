@@ -50,7 +50,7 @@ leaflet() %>%
 
 This exemplary showcases the potentials of the VBC package to correct for the bias in the climate model data of the Allgäuer Hochalpen during 2011 to 2020 for 5 key climate variables. The error prone data consists of the 50 member of the regional climate model large ensemble, CRCM5-LE in a 12km resolution. `mp_dts` contains the model data during projection (2011 - 2020), `mc_dts` the model data during the calibration period (1981 - 2010). The CRCM-5 data are corrected using the SDCLIREF version2 reference data in 12km resolution. The reference data `oc_dt` is used to correct the model data. `op_dt` contains the targeted distribution in is held out for elevation purposes. For more information, see
 
--   Funk, H., Ludwig, R., Kuechenhoff, H., & Nagler, T. (2024). Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas. arXiv preprint <arXiv:2410.15931>.
+-   Henri Funk, Ralf Ludwig, Helmut Küchenhoff, Thomas Nagler, Towards more realistic climate model outputs: a multivariate bias correction based on zero-inflated vine copulas, Journal of the Royal Statistical Society Series C: Applied Statistics, 2025;, qlaf044, https://doi.org/10.1093/jrsssc/qlaf044.
 
 -   Lehr- und Forschungseinheit für physische Geographie und komplexe Umweltsysteme, & Wood, R. R. (2024). SDCLIREFv2 (Version 2) [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.13221576>
 

@@ -1,41 +1,46 @@
 Package: VBC
 Title: Vine Copula based Bias Correction for Climate Models
-Version: 0.0.1.0
+Version: 1.0.0
 Authors@R: 
     person("Henri", "Funk", , "H.Funk@lmu.de", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0007-0949-8385"))
-Description: VBC implements a method to correct the bias in simulated
-  climate data with observed data while preserving the internal variability of
-  the model. To evaluate the method and compare it with others, several post hoc 
-  diagnostic measures are provided. The MCI is a measure to evaluate how well
-  the correction method preserved the rank structure of model data. Wasserstein
-  metrics can be calculated to determine, how distant the distributions of 
-  corrected and measured data are.
+Description: A vine copula based method to correct the bias in
+    high-resolution climate data with observed data while preserving the
+    internal variability of a climate model. The method is designed for
+    multivariate climate data at high temporal resolution. Therefore,
+    climate variables like precipitation and radiation may contain
+    zero-inflation. To evaluate and compare the method with others,
+    several post-hoc diagnostic measures are provided. The MCI is a
+    measure to evaluate how well the correction method preserved the rank
+    structure of model data. Wasserstein metrics can be calculated to
+    determine, how distant the distributions of corrected and measured
+    data are.
 License: LGPL-3
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
-Imports:
-  checkmate,
-  data.table,
-  ggplot2,
-  kde1d,
-  lubridate,
-  parallel,
-  rvinecopulib,
-  scales,
-  transport
-Suggests: 
-    testthat (>= 3.0.0),
-    spelling,
-    patchwork,
-    leaflet,
-    knitr,
-    rmarkdown
-Config/testthat/edition: 3
-Language: en-US
+URL: https://henrifnk.github.io/VBC/
 Depends: 
     R (>= 2.10)
+Imports:
+    checkmate,
+    data.table,
+    ggplot2,
+    kde1d,
+    lubridate,
+    parallel,
+    rvinecopulib,
+    scales,
+    transport
+Suggests: 
+    knitr,
+    leaflet,
+    patchwork,
+    rmarkdown,
+    spelling,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
 LazyData: true
-VignetteBuilder: knitr
-URL: https://henrifnk.github.io/VBC/
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

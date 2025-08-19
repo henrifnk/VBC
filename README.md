@@ -4,6 +4,7 @@
 # Bias Correction by Zero-Inflated Vine Copulas <img src="man/figures/logo.svg" align="right" height="139" alt="" />
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 Vine Copula Bias Correction for partially zero-inflated margins (VBC) is
@@ -15,19 +16,12 @@ pseudo observations. The proposed method is tailored to model
 dependencies between heavy tailed, zero-inflated and continuous climate
 variables with high temporal resolution, ensuring precise corrections.
 Notably, our approach is designed for high interpretability, enabling
-control and assessment of the results.
+control and assessment of the results. For technical details, please
+refer to the [paper](https://doi.org/10.1093/jrsssc/qlaf044).
 
 ## Installation
 
-You can install the development versions for zero inflation from `kde1d`
-and `rvinecopulib` before installing the development version of VBC from
-[GitHub](https://github.com/) with:
-
 ``` r
-# prerequisits
-remotes::install_github("vinecopulib/rvinecopulib@pull-zi")
-remotes::install_github("tnagler/kde1d@dev")
-
 # without vignette
 remotes::install_github("henrifnk/VBC")
 # with vignette
@@ -45,7 +39,7 @@ library(data.table)
 library(ggplot2)
 library(knitr)
 library(patchwork)
-library(VBC)
+#library(VBC)
 
 data("climate")
 
@@ -137,23 +131,29 @@ kable(data.frame("Wasserstein_Uncorrected" = wd_mvd_pre,
 
 |  | Wasserstein_Uncorrected | Wasserstein_Corrected | Improvement | Improvement_in_Perc |
 |:---|---:|---:|---:|---:|
-| Wasserstein_1 | 0.66 | 0.37 | 0.28 | 43.21 |
-| Wasserstein_2 | 0.95 | 0.48 | 0.47 | 49.66 |
+| Wasserstein_1 | 0.66 | 0.37 | 0.29 | 43.48 |
+| Wasserstein_2 | 0.95 | 0.48 | 0.48 | 50.02 |
 
 # Citation
 
 If you use `VBC` in a scientific publication, please
-[cite](https://arxiv.org/abs/2410.15931) it as:
+[cite](https://doi.org/10.1093/jrsssc/qlaf044) it as:
 
-    Funk, H., Ludwig, R., Kuechenhoff, H., & Nagler, T. (2024). Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas. arXiv preprint arXiv:2410.15931.
+    Henri Funk, Ralf Ludwig, Helmut Küchenhoff, Thomas Nagler, Towards more realistic climate model outputs: a multivariate bias correction based on zero-inflated vine copulas, Journal of the Royal Statistical Society Series C: Applied Statistics, 2025;, qlaf044, https://doi.org/10.1093/jrsssc/qlaf044
 
 BibTeX:
 
 ``` tex
-@article{funk2024,
-  title={Towards more realistic climate model outputs: A multivariate bias correction based on zero-inflated vine copulas},
-  author={Funk, Henri and Ludwig, Ralf and Kuechenhoff, Helmut and Nagler, Thomas},
-  journal={arXiv preprint arXiv:2410.15931},
-  year={2024}
+@article{funk2025,
+    author = {Funk, Henri and Ludwig, Ralf and Küchenhoff, Helmut and Nagler, Thomas},
+    title = {Towards more realistic climate model outputs: a multivariate bias correction based on zero-inflated vine copulas},
+    journal = {Journal of the Royal Statistical Society Series C: Applied Statistics},
+    pages = {qlaf044},
+    year = {2025},
+    month = {08},
+    issn = {0035-9254},
+    doi = {10.1093/jrsssc/qlaf044},
+    url = {https://doi.org/10.1093/jrsssc/qlaf044},
+    eprint = {https://academic.oup.com/jrsssc/advance-article-pdf/doi/10.1093/jrsssc/qlaf044/64045829/qlaf044.pdf},
 }
 ```
