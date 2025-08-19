@@ -20,6 +20,7 @@ URL: https://henrifnk.github.io/VBC/
 Depends: 
     R (>= 2.10)
 Imports:
+    assertthat,
     checkmate,
     data.table,
     ggplot2,
@@ -28,7 +29,9 @@ Imports:
     parallel,
     rvinecopulib,
     scales,
-    transport
+    stats,
+    transport,
+    utils
 Suggests: 
     knitr,
     leaflet,

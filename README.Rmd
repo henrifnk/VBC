@@ -49,7 +49,6 @@ We aim to correct CRCM5 climate data for Munich, Germany, for the year 2010.
 The data is available in the package as `climate`.
 We will use the `vbc` function to correct the data. 
 
-
 ```{r lib_n_data, message=FALSE}
 library(data.table)
 library(ggplot2)
