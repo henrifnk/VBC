@@ -33,7 +33,8 @@ Imports:
     stats,
     transport,
     utils
-Suggests: 
+Suggests:
+    curl,
     knitr,
     leaflet,
     patchwork,
