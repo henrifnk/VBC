@@ -80,10 +80,8 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/curl" class="external-link">curl</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Using libcurl 8.5.0 with OpenSSL/3.0.13</span></span></code></pre>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">theme</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text.y  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span></span>
+<span><span class="va">theme</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text.y  <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
 <span>              panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="allgäuer-hochalpen">Allgäuer Hochalpen<a class="anchor" aria-label="anchor" href="#allg%C3%A4uer-hochalpen"></a>
@@ -123,7 +121,7 @@ set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13221576" class="external-
 <li><p>Funk, H. (2024). Bias Correction of CRCM5-LE for Hydrological
 Bavaria (1.0.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13348397" class="external-link uri">https://doi.org/10.5281/zenodo.13348397</a></p></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">temp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span></span>
 <span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">.Platform</span><span class="op">$</span><span class="va">OS.type</span> <span class="op">==</span> <span class="st">"windows"</span><span class="op">)</span> <span class="op">{</span></span>
@@ -141,13 +139,13 @@ demonstration purposes, the bias correction is performed for the winter
 nights in the Allgäuer Hochalpen. The winter nights are defined as the
 hours between 21:00 and 06:00 in the months December, January, and
 February.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">winter_night</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  nightDJF <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span>, month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>We showcase the bias correction on the first 5 members of the
 CRCM5-LE. Therefore we subset the model data.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">members</span> <span class="op">&lt;-</span> <span class="va">mp_dts</span><span class="op">$</span><span class="va">member</span></span>
 <span><span class="va">mem_5</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"kba"</span>, <span class="st">"kbb"</span>, <span class="st">"kbc"</span>, <span class="st">"kbd"</span>, <span class="st">"kbe"</span><span class="op">)</span></span>
 <span><span class="va">members</span> <span class="op">=</span> <span class="va">members</span><span class="op">[</span><span class="va">members</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">mem_5</span><span class="op">]</span></span>
@@ -167,7 +165,7 @@ infinity.</p>
 <p>The function now efficiently corrects the model data for each
 temporal subset in <code>t_subs</code> and each member in
 <code>split_mp</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">margins_controls</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  xmin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NaN</span>, <span class="fl">0</span>, <span class="cn">NaN</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"zi"</span>, <span class="st">"c"</span>, <span class="st">"zi"</span>, <span class="st">"c"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -193,7 +191,7 @@ data with the reference data <code>op_dt</code>. Using
 marginal distribution of a climate variable before and after the bias
 correction with the target reference data. Ideally, the corrected model
 data should be as close as possible to the reference data.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">mp_dts</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>                    <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span>, <span class="st">"dew"</span>, scale_d <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>           mult <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="va">theme</span> <span class="op">+</span></span>
@@ -212,7 +210,7 @@ data should be as close as possible to the reference data.</p>
 Wasserstein distance between the corrected model data and the reference.
 The Wasserstein distance is a measure of the distance between two
 probability distributions.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wd_post</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">vbc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">mem</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/calc_wasserstein.html">calc_wasserstein</a></span><span class="op">(</span><span class="va">op_dt</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>                           <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">mem</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>,</span>
@@ -280,7 +278,7 @@ probability distributions.</p>
 </table>
 <p>At the univariate level of dew point temperature, the bias correction
 improves the model data for any of the 5 members of the CRCM5-LE.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wd_post</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">vbc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">mem</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/calc_wasserstein.html">calc_wasserstein</a></span><span class="op">(</span><span class="va">op_dt</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>                           <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">mem</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span>
@@ -313,7 +311,7 @@ improves the model data for any of the 5 members of the CRCM5-LE.</p>
 <tr class="odd">
 <td align="left">kba</td>
 <td align="right">6.05</td>
-<td align="right">1.21</td>
+<td align="right">1.22</td>
 <td align="right">4.84</td>
 </tr>
 <tr class="even">
@@ -354,7 +352,7 @@ correction method preserves the course of weather patterns of the model
 data. This way the original characteristics of the climate model are
 still maintained. The MCI is a measure of the preservation of the
 weather patterns.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mci</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mapply.html" class="external-link">mapply</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">before</span>, <span class="va">after</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">idx</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">before</span><span class="op">$</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>                    <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">before</span><span class="op">$</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -369,7 +367,7 @@ bias correction that did not change the course of the weather patterns
 from the model data. The MCI is limited at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math>
 indicating a maximal change in the course of weather.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mci2020</span> <span class="op">=</span> <span class="va">mci</span><span class="op">[</span><span class="va">mci</span><span class="op">$</span><span class="va">time</span> <span class="op">&gt;</span> <span class="st">"2019-11-01"</span> <span class="op">&amp;</span> <span class="va">mci</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;</span> <span class="st">"2020-03-01"</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mci2020</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">kba</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"lightblue"</span>, linewidth <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
@@ -388,7 +386,7 @@ indicating a maximal change in the course of weather.</p>
 assessment of the correction. With an median inconsistency of 0.03, we
 can assume the weather in winter nights 2019/2020 to be mainly
 preserved.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">mci</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">median</span><span class="op">)</span>,</span>
 <span>            sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">mci</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">sd</span><span class="op">)</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
