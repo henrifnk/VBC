@@ -28,7 +28,6 @@ library(ggplot2)
 library(knitr)
 library(leaflet)
 library(patchwork)
-library(curl)
 
 theme = theme(strip.text.y  = element_text(face = "bold"),
               panel.grid.minor = element_blank())
