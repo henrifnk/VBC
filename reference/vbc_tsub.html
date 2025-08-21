@@ -61,31 +61,31 @@
 
 
 <dl><dt id="arg-mp">mp<a class="anchor" aria-label="anchor" href="#arg-mp"></a></dt>
-<dd><p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a><br>
+<dd><p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table</a>
 Simulation data from a climate model during projection period.
 Expects one column time.</p></dd>
 
 
 <dt id="arg-mc">mc<a class="anchor" aria-label="anchor" href="#arg-mc"></a></dt>
-<dd><p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a><br>
+<dd><p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table</a>
 Simulation data from a climate model during calibration period.
 Expects one column time.</p></dd>
 
 
 <dt id="arg-rc">rc<a class="anchor" aria-label="anchor" href="#arg-rc"></a></dt>
-<dd><p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a><br>
+<dd><p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table</a>
 Measured (and interpolated) observations during calibration period.
 Expects one column time.</p></dd>
 
 
 <dt id="arg-var-names">var_names<a class="anchor" aria-label="anchor" href="#arg-var-names"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a><br>
+<dd><p><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a>
 Names of corrected climate data. Defaults to the column names of the
 observed data <code>rc</code>.</p></dd>
 
 
 <dt id="arg-margins-controls">margins_controls<a class="anchor" aria-label="anchor" href="#arg-margins-controls"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a><br>
+<dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a>
 A list with arguments to be passed to <code><a href="https://tnagler.github.io/kde1d/reference/kde1d.html" class="external-link">kde1d::kde1d()</a></code>. Currently, there can be</p><ul><li><p><code>mult</code> numeric vector of length one or d; all bandwidths for marginal
 kernel density estimation are multiplied with <code>mult</code>. Defaults to
 <code>log(1 + d)</code> where <code>d</code> is the number of climate variables.</p></li>
@@ -101,7 +101,7 @@ zero-inflated variables.</p></li>
 
 
 <dt id="arg-t-subs">t_subs<a class="anchor" aria-label="anchor" href="#arg-t-subs"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a><br>
+<dd><p><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a>
 A list of two lists: hours and month. Each list contains the temporal
 indicators to subset the data. The first list contains the hours of the day
 the length of list marks the number of fragments. The inner list contains the
@@ -109,31 +109,30 @@ hour and monthly information to subset the data.</p></dd>
 
 
 <dt id="arg-overlap">overlap<a class="anchor" aria-label="anchor" href="#arg-overlap"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a><br>
+<dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a>
 The number of times to overlap the temporal indicators.</p></dd>
 
 
 <dt id="arg-cores-t">cores_t<a class="anchor" aria-label="anchor" href="#arg-cores-t"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a><br>
+<dd><p><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a>
 The number of cores to use for parallel processing of the temporal
 subsetting. Default is <code>NA</code> which means no parallel processing.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a><br>
+<dd><p><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a>
 Print messages during the temporal subsetting.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p><br>
-Arguments are passed to <a href="https://vinecopulib.github.io/rvinecopulib/reference/vinecop.html" class="external-link">rvinecopulib::vinecop</a> to specify the structure of
+<dd><p>Arguments are passed to <a href="https://vinecopulib.github.io/rvinecopulib/reference/vinecop.html" class="external-link">rvinecopulib::vinecop</a> to specify the structure of
 vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a><br>
+    <p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table</a>
 The corrected projection period data in <code>mp</code>. Additionally the data frame
 contains the attribute <code>mvd</code> with one list per temporal subset. In each
 subset <code>vine_rc</code>, <code>kde_rc</code>, <code>vine_mp</code>, and <code>kde_mp</code> which store the

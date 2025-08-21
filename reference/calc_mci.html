@@ -61,31 +61,31 @@ method preserves the model-specific rank structure.</p>
 
 
 <dl><dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a><br>
+<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>
 Simulation climate data from the climate model.</p></dd>
 
 
 <dt id="arg-model-correction">model_correction<a class="anchor" aria-label="anchor" href="#arg-model-correction"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a><br>
+<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>
 Simulation climate data <code>model</code> from the climate model corrected by an
 arbitrary bias correction method.</p></dd>
 
 
 <dt id="arg-time-p">time_p<a class="anchor" aria-label="anchor" href="#arg-time-p"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/date.html" class="external-link">date</a><br>
+<dd><p><a href="https://rdrr.io/r/base/date.html" class="external-link">date</a>
 An optional vector with a time point for each observation/row in the
 (corrected) model data. Default is NA which indicates that no temporal
 information are given.</p></dd>
 
 
 <dt id="arg-p">p<a class="anchor" aria-label="anchor" href="#arg-p"></a></dt>
-<dd><p><code>numeric(1)</code><br>
+<dd><p><code>numeric(1)</code>
 The power of the global MCI. Default is 1.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a><br>
+    <p><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table::data.table</a>
 Contains the points of time if supplied in <code>time_p</code> and the respective
 local MCI. Note that the last time step is truncated while derivation. The
 attribute global contains the global MCI, which is the mean over all MCI

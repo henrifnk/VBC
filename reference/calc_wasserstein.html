@@ -64,22 +64,22 @@ distribution of the model data after the correction.</p>
 
 
 <dl><dt id="arg-observed">observed<a class="anchor" aria-label="anchor" href="#arg-observed"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a><br>
+<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>
 Measured (and interpolated) observations.</p></dd>
 
 
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
-<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a><br>
+<dd><p><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a>
 Simulation climate data from the climate model.</p></dd>
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p><code>integer(1)</code><br>
+<dd><p><code>integer(1)</code>
 Length of samples to be drawn from model and observed data.</p></dd>
 
 
 <dt id="arg-scale-dta">scale_dta<a class="anchor" aria-label="anchor" href="#arg-scale-dta"></a></dt>
-<dd><p><code>cahracter(1)</code><br>
+<dd><p><code>cahracter(1)</code>
 Scale the data before calculating the Wasserstein distance. Default is
 "observed". Possible values are "both", "observed", and "sd". If "both" the
 data are scaled to zero mean and unit variance. If "observed" the data are
@@ -88,13 +88,12 @@ are scaled to zero mean and unit variance.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p><br>
-Further arguments passed to <a href="https://rdrr.io/pkg/transport/man/transport.html" class="external-link">transport::transport</a>.</p></dd>
+<dd><p>Further arguments passed to <a href="https://rdrr.io/pkg/transport/man/transport.html" class="external-link">transport::transport</a>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A named vector of length 2.<br></p><ul><li><p>Wasserstein_1: The Wasserstein distance of order 1</p></li>
+    <p>A named vector of length 2.</p><ul><li><p>Wasserstein_1: The Wasserstein distance of order 1</p></li>
 <li><p>Wasserstein_2: The Wasserstein distance of order 2</p></li>
 </ul></div>
     <div class="section level2">
