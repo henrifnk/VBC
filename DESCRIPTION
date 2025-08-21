@@ -1,5 +1,5 @@
 Package: VBC
-Title: Vine Copula based Bias Correction for Climate Models
+Title: Vine Copula Based Bias Correction for Climate Models
 Version: 1.0.0
 Authors@R: 
     person("Henri", "Funk", , "H.Funk@lmu.de", role = c("aut", "cre"),

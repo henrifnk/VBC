@@ -22,7 +22,7 @@
 #' @param p `numeric(1)`\cr
 #'  The power of the global MCI. Default is 1.
 #'
-#' @return [data.table]\cr
+#' @return [data.table::data.table]\cr
 #' Contains the points of time if supplied in `time_p` and the respective
 #' local MCI. Note that the last time step is truncated while derivation. The
 #' attribute global contains the global MCI, which is the mean over all MCI
@@ -49,7 +49,7 @@ calc_mci <- function(model, model_correction, time_p = NA, p = 1) {
 
 #' @title Calculate Non-Exceedance Probability
 #'
-#' @param data [data.table]\cr
+#' @param data [data.table::data.table]\cr
 #' On each of the rows in the data.table, the non-exceedance probability is
 #' calculated. 
 #'  
@@ -74,13 +74,13 @@ calculate_pemp <- function(data) {
 #'
 #' @inheritParams calc_mci
 #'
-#' @param observed [data.frame]\cr
+#' @param observed [data.frame] \cr
 #'  Measured (and interpolated) observations.
 #'
-#' @param n `integer(1)`\cr
+#' @param n `integer(1)` \cr
 #'  Length of samples to be drawn from model and observed data.
 #'
-#' @param scale_dta `cahracter(1)`\cr
+#' @param scale_dta `cahracter(1)` \cr
 #' Scale the data before calculating the Wasserstein distance. Default is
 #' "observed". Possible values are "both", "observed", and "sd". If "both" the
 #' data are scaled to zero mean and unit variance. If "observed" the data are

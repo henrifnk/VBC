@@ -1,14 +1,14 @@
 #' Combine VBC and the Method of fragments
 #' 
-#' @param rc [data.table]\cr
+#' @param rc [data.table::data.table]\cr
 #'  Measured (and interpolated) observations during calibration period. 
 #'  Expects one column time.
 #' 
-#' @param mc [data.table]\cr
+#' @param mc [data.table::data.table]\cr
 #'  Simulation data from a climate model during calibration period.
 #'  Expects one column time.
 #'
-#' @param mp [data.table]\cr
+#' @param mp [data.table::data.table]\cr
 #'  Simulation data from a climate model during projection period.
 #'  Expects one column time.
 #'  
@@ -42,7 +42,7 @@
 #' rainfall simulation. 1. A regionalized subdaily disaggregation approach. 
 #' In: Water Resour. Res. 48 (1). DOI: 10.1029/2011WR010489.
 #' 
-#' @return [data.table]\cr
+#' @return [data.table::data.table]\cr
 #'  The corrected projection period data in `mp`. Additionally the data frame
 #'  contains the attribute `mvd` with one list per temporal subset. In each
 #'  subset `vine_rc`, `kde_rc`, `vine_mp`, and `kde_mp` which store the 

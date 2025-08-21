@@ -7,7 +7,7 @@
 estimate_margins(dta, margins_controls, kde = NULL)
 }
 \arguments{
-\item{dta}{\link{data.table}\cr
+\item{dta}{\link[data.table:data.table]{data.table::data.table}\cr
 Data to calculate the margins.}
 
 \item{margins_controls}{\link{list}\cr

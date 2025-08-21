@@ -19,15 +19,15 @@ vbc_tsub(
 )
 }
 \arguments{
-\item{mp}{\link{data.table}\cr
+\item{mp}{\link[data.table:data.table]{data.table::data.table}\cr
 Simulation data from a climate model during projection period.
 Expects one column time.}
 
-\item{mc}{\link{data.table}\cr
+\item{mc}{\link[data.table:data.table]{data.table::data.table}\cr
 Simulation data from a climate model during calibration period.
 Expects one column time.}
 
-\item{rc}{\link{data.table}\cr
+\item{rc}{\link[data.table:data.table]{data.table::data.table}\cr
 Measured (and interpolated) observations during calibration period.
 Expects one column time.}
 
@@ -73,7 +73,7 @@ vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }
 \value{
-\link{data.table}\cr
+\link[data.table:data.table]{data.table::data.table}\cr
 The corrected projection period data in \code{mp}. Additionally the data frame
 contains the attribute \code{mvd} with one list per temporal subset. In each
 subset \code{vine_rc}, \code{kde_rc}, \code{vine_mp}, and \code{kde_mp} which store the

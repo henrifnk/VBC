@@ -7,7 +7,7 @@
 calculate_pemp(data)
 }
 \arguments{
-\item{data}{\link{data.table}\cr
+\item{data}{\link[data.table:data.table]{data.table::data.table}\cr
 On each of the rows in the data.table, the non-exceedance probability is
 calculated.}
 }

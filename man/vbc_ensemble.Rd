@@ -7,15 +7,15 @@
 vbc_ensemble(mp, mc, rc, var_names, margins_controls, time_mp, ...)
 }
 \arguments{
-\item{mp}{\link{data.table} OR \link{list}\cr
+\item{mp}{\link[data.table:data.table]{data.table::data.table} OR \link{list}\cr
 Simulation data from a climate model during projection period. If this is a
 list, the algorithm expects each element to be a member of a model ensemble.
 Each list element is then a data table.}
 
-\item{mc}{\link{data.table}\cr
+\item{mc}{\link[data.table:data.table]{data.table::data.table}\cr
 Simulation data from a climate model during calibration period.}
 
-\item{rc}{\link{data.table}\cr
+\item{rc}{\link[data.table:data.table]{data.table::data.table}\cr
 Historical reference in calibration period.}
 
 \item{var_names}{\link{character}\cr

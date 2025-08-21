@@ -1,9 +1,9 @@
 #' Correct data by Rosenblatt transformation
 #' 
-#' @param mpu [data.table]\cr
+#' @param mpu [data.table::data.table]\cr
 #' Model data from [vbc()].
 #' 
-#' @param rcu [data.table]\cr
+#' @param rcu [data.table::data.table]\cr
 #' Observed data from [vbc()].
 #' 
 #' @return Corrected data by Rosenblatt transformation.

@@ -23,7 +23,7 @@ information are given.}
 The power of the global MCI. Default is 1.}
 }
 \value{
-\link{data.table}\cr
+\link[data.table:data.table]{data.table::data.table}\cr
 Contains the points of time if supplied in \code{time_p} and the respective
 local MCI. Note that the last time step is truncated while derivation. The
 attribute global contains the global MCI, which is the mean over all MCI

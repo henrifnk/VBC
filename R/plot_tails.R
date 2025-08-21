@@ -1,12 +1,12 @@
 #' @title Plot Tails
 #' @description This function plots the tails probabilities of a marginal
 #' distribution.
-#' @param data [data.table]\cr
+#' @param data [data.table::data.table]\cr
 #' A data.table containing the data to be plotted.
 #' @param var [character]\cr
 #' The variable to be plotted. Must be a column of `data`.
 #' @param xmin [numeric]\cr
-#' The minimum value of the variable to be plotted. Passed to [kde1d].
+#' The minimum value of the variable to be plotted. Passed to [kde1d::kde1d].
 #' Default is `NA` indicating no lower limit.
 #' @param scale_d [numeric]\cr
 #' The scaling factor for the density plot between continuous and relative axis.
@@ -14,7 +14,7 @@
 #' relative frequency are too distinct on the y-axis. Only used for zero
 #' inflated variables.
 #' @param mult [numeric]\cr
-#' Bin width multiplier. Passed to [kde1d].
+#' Bin width multiplier. Passed to [kde1d::kde1d].
 #' Default is 1 indicating no multiplication.
 #' @param length_out [numeric]\cr
 #' The length of the sequence to be used for the density plot. Default is `1e4`.

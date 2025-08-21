@@ -2,7 +2,7 @@
 #' Estimate Margins
 #'
 #' @inheritParams vbc
-#' @param dta [data.table]\cr
+#' @param dta [data.table::data.table]\cr
 #' Data to calculate the margins.
 #' @param kde [list]\cr
 #' kernel density estimations.

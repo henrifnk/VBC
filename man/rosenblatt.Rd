@@ -27,6 +27,5 @@ PIT-transformed values in \eqn{[0,1]}.
 \description{
 The Rosenblatt transformation is a method to transform uniform
 pseudo-observations into the original scale of the data, preserving the
-copula structure. Adapted from \code{\link[rvinecopulib:rosenblatt]{rvinecopulib::rosenblatt()}} and
-\code{\link[rvinecopulib:rosenblatt]{rvinecopulib::inverse_rosenblatt()}}.
+copula structure. Adapted from \code{\link[rvinecopulib:rosenblatt]{rvinecopulib::rosenblatt()}}.
 }

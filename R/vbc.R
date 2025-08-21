@@ -12,15 +12,15 @@
 #' projection domain via delta mapping. The steps are equivalent to those in
 #' univariate bias correction via quantile delta mapping.
 #'
-#' @param mp [data.table] OR [list]\cr
+#' @param mp [data.table::data.table] OR [list]\cr
 #'  Simulation data from a climate model during projection period. If this is a
 #'  list, the algorithm expects each element to be a member of a model ensemble.
 #'  Each list element is then a data table.
 #'
-#' @param mc [data.table]\cr
+#' @param mc [data.table::data.table]\cr
 #'  Simulation data from a climate model during calibration period.
 #'
-#' @param rc [data.table]\cr
+#' @param rc [data.table::data.table]\cr
 #'  Historical reference in calibration period.
 #'
 #' @param var_names [character]\cr
@@ -50,7 +50,7 @@
 #'  vines and margins. Note that the ellipsis of observed and model data are
 #'  specified with the same arguments.
 #'
-#' @return [data.table] OR [list]\cr
+#' @return [data.table::data.table] OR [list]\cr
 #'  The corrected projection period data in `mp`. Additionally the data frame
 #'  contains the attributes `vine_rc`, `kde_rc`, `vine_mp`, and `kde_mp` which
 #'  store the vine copula and kernel density estimation objects of the observed

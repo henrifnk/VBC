@@ -7,10 +7,10 @@
 correct_rosenblatt(mpu, rcu)
 }
 \arguments{
-\item{mpu}{\link{data.table}\cr
+\item{mpu}{\link[data.table:data.table]{data.table::data.table}\cr
 Model data from \code{\link[=vbc]{vbc()}}.}
 
-\item{rcu}{\link{data.table}\cr
+\item{rcu}{\link[data.table:data.table]{data.table::data.table}\cr
 Observed data from \code{\link[=vbc]{vbc()}}.}
 }
 \value{
