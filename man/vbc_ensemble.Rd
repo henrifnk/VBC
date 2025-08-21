@@ -7,22 +7,22 @@
 vbc_ensemble(mp, mc, rc, var_names, margins_controls, time_mp, ...)
 }
 \arguments{
-\item{mp}{\link[data.table:data.table]{data.table::data.table} OR \link{list}\cr
+\item{mp}{\link[data.table:data.table]{data.table::data.table} OR \link{list}
 Simulation data from a climate model during projection period. If this is a
 list, the algorithm expects each element to be a member of a model ensemble.
 Each list element is then a data table.}
 
-\item{mc}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{mc}{\link[data.table:data.table]{data.table::data.table}
 Simulation data from a climate model during calibration period.}
 
-\item{rc}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{rc}{\link[data.table:data.table]{data.table::data.table}
 Historical reference in calibration period.}
 
-\item{var_names}{\link{character}\cr
+\item{var_names}{\link{character}
 Names of corrected climate data. Defaults to the column names of the
 observed data \code{rc}.}
 
-\item{margins_controls}{\link{list}\cr
+\item{margins_controls}{\link{list}
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
 \itemize{
 \item \code{mult} numeric vector of length one or d; all bandwidths for marginal
@@ -38,17 +38,16 @@ discrete integer variables, or one of zi, zinfl, zero-inflated for
 zero-inflated variables.
 }}
 
-\item{time_mp}{\link{numeric}\cr
+\item{time_mp}{\link{numeric}
 Time vector of the projection period attached to the returned object as a
 column. Defaults to \code{NA}, which means no time vector is attached.}
 
-\item{...}{\cr
-Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
+\item{...}{Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
 vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }
 \value{
-\link{list}\cr
+\link{list}
 A list of corrected data frames for each member of the model ensemble.
 }
 \description{

@@ -19,23 +19,23 @@ vbc_tsub(
 )
 }
 \arguments{
-\item{mp}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{mp}{\link[data.table:data.table]{data.table::data.table}
 Simulation data from a climate model during projection period.
 Expects one column time.}
 
-\item{mc}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{mc}{\link[data.table:data.table]{data.table::data.table}
 Simulation data from a climate model during calibration period.
 Expects one column time.}
 
-\item{rc}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{rc}{\link[data.table:data.table]{data.table::data.table}
 Measured (and interpolated) observations during calibration period.
 Expects one column time.}
 
-\item{var_names}{\link{character}\cr
+\item{var_names}{\link{character}
 Names of corrected climate data. Defaults to the column names of the
 observed data \code{rc}.}
 
-\item{margins_controls}{\link{list}\cr
+\item{margins_controls}{\link{list}
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
 \itemize{
 \item \code{mult} numeric vector of length one or d; all bandwidths for marginal
@@ -51,29 +51,28 @@ discrete integer variables, or one of zi, zinfl, zero-inflated for
 zero-inflated variables.
 }}
 
-\item{t_subs}{\link{list}\cr
+\item{t_subs}{\link{list}
 A list of two lists: hours and month. Each list contains the temporal
 indicators to subset the data. The first list contains the hours of the day
 the length of list marks the number of fragments. The inner list contains the
 hour and monthly information to subset the data.}
 
-\item{overlap}{\link{integer}\cr
+\item{overlap}{\link{integer}
 The number of times to overlap the temporal indicators.}
 
-\item{cores_t}{\link{integer}\cr
+\item{cores_t}{\link{integer}
 The number of cores to use for parallel processing of the temporal
 subsetting. Default is \code{NA} which means no parallel processing.}
 
-\item{verbose}{\link{logical}\cr
+\item{verbose}{\link{logical}
 Print messages during the temporal subsetting.}
 
-\item{...}{\cr
-Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
+\item{...}{Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
 vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }
 \value{
-\link[data.table:data.table]{data.table::data.table}\cr
+\link[data.table:data.table]{data.table::data.table}
 The corrected projection period data in \code{mp}. Additionally the data frame
 contains the attribute \code{mvd} with one list per temporal subset. In each
 subset \code{vine_rc}, \code{kde_rc}, \code{vine_mp}, and \code{kde_mp} which store the

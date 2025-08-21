@@ -15,7 +15,7 @@ calc_range(v, min, max, res, overlap = 1)
 
 \item{res}{resolution of time}
 
-\item{overlap}{\link{integer}\cr
+\item{overlap}{\link{integer}
 The number of times to overlap the temporal indicators.}
 }
 \value{

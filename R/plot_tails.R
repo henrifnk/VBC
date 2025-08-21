@@ -1,22 +1,22 @@
 #' @title Plot Tails
 #' @description This function plots the tails probabilities of a marginal
 #' distribution.
-#' @param data [data.table::data.table]\cr
+#' @param data [data.table::data.table] 
 #' A data.table containing the data to be plotted.
-#' @param var [character]\cr
+#' @param var [character] 
 #' The variable to be plotted. Must be a column of `data`.
-#' @param xmin [numeric]\cr
+#' @param xmin [numeric] 
 #' The minimum value of the variable to be plotted. Passed to [kde1d::kde1d].
 #' Default is `NA` indicating no lower limit.
-#' @param scale_d [numeric]\cr
+#' @param scale_d [numeric] 
 #' The scaling factor for the density plot between continuous and relative axis.
 #' Default is `3`. Regulate the factor, if continuous density estimates and 
 #' relative frequency are too distinct on the y-axis. Only used for zero
 #' inflated variables.
-#' @param mult [numeric]\cr
+#' @param mult [numeric] 
 #' Bin width multiplier. Passed to [kde1d::kde1d].
 #' Default is 1 indicating no multiplication.
-#' @param length_out [numeric]\cr
+#' @param length_out [numeric] 
 #' The length of the sequence to be used for the density plot. Default is `1e4`.
 #' @return A ggplot that plots the continuous density estimate of the variable 
 #' and the relative frequency of inflation.

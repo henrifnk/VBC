@@ -2,9 +2,9 @@
 #' Estimate Margins
 #'
 #' @inheritParams vbc
-#' @param dta [data.table::data.table]\cr
+#' @param dta [data.table::data.table] 
 #' Data to calculate the margins.
-#' @param kde [list]\cr
+#' @param kde [list] 
 #' kernel density estimations.
 #'
 #' @return A data frame with the marginal PIT.

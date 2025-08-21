@@ -4,7 +4,7 @@
 #' Estimate the multivariate distribution of the model data via vine copula
 #' estimation (see [rvinecopulib::vine]).
 #' 
-#' @param data [data.frame]\cr
+#' @param data [data.frame]
 #' Data to estimate the multivariate distribution.
 #' 
 #' @inheritParams vbc

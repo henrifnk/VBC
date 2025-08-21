@@ -6,15 +6,15 @@
 #' applied when the projection quantiles are lower than the calibration
 #' quantiles.
 #'
-#' @param mp [double]\cr
+#' @param mp [double]
 #'  uncorrected climate variable in projection period.
-#' @param mph [double]\cr
+#' @param mph [double]
 #'  corrected climate variable in projection period.
-#' @param mp_kde [kde1d::kde1d]\cr
+#' @param mp_kde [kde1d::kde1d]
 #'  a kernel density estimation of the climate variable in projection period.
-#' @param mc_kde [kde1d::kde1d]\cr
+#' @param mc_kde [kde1d::kde1d]
 #'  a kernel density estimation of the climate variable in calibration period.
-#' @param xmin double(1)\cr
+#' @param xmin double(1)
 #'  A vector indicating if `xmin` is a ratio variable type or any other type (NA).
 #' @return A climate variable that is corrected by the climate trend in the
 #' model between correction and projection period.

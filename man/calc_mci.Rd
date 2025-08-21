@@ -7,23 +7,23 @@
 calc_mci(model, model_correction, time_p = NA, p = 1)
 }
 \arguments{
-\item{model}{\link{data.frame}\cr
+\item{model}{\link{data.frame}
 Simulation climate data from the climate model.}
 
-\item{model_correction}{\link{data.frame}\cr
+\item{model_correction}{\link{data.frame}
 Simulation climate data \code{model} from the climate model corrected by an
 arbitrary bias correction method.}
 
-\item{time_p}{\link{date}\cr
+\item{time_p}{\link{date}
 An optional vector with a time point for each observation/row in the
 (corrected) model data. Default is NA which indicates that no temporal
 information are given.}
 
-\item{p}{\code{numeric(1)}\cr
+\item{p}{\code{numeric(1)}
 The power of the global MCI. Default is 1.}
 }
 \value{
-\link[data.table:data.table]{data.table::data.table}\cr
+\link[data.table:data.table]{data.table::data.table}
 Contains the points of time if supplied in \code{time_p} and the respective
 local MCI. Note that the last time step is truncated while derivation. The
 attribute global contains the global MCI, which is the mean over all MCI

@@ -13,27 +13,26 @@ calc_wasserstein(
 )
 }
 \arguments{
-\item{observed}{\link{data.frame}\cr
+\item{observed}{\link{data.frame}
 Measured (and interpolated) observations.}
 
-\item{model}{\link{data.frame}\cr
+\item{model}{\link{data.frame}
 Simulation climate data from the climate model.}
 
-\item{n}{\code{integer(1)}\cr
+\item{n}{\code{integer(1)}
 Length of samples to be drawn from model and observed data.}
 
-\item{scale_dta}{\code{cahracter(1)}\cr
+\item{scale_dta}{\code{cahracter(1)}
 Scale the data before calculating the Wasserstein distance. Default is
 "observed". Possible values are "both", "observed", and "sd". If "both" the
 data are scaled to zero mean and unit variance. If "observed" the data are
 scaled to zero mean and unit variance of the observed data. If "sd" the data
 are scaled to zero mean and unit variance.}
 
-\item{...}{\cr
-Further arguments passed to \link[transport:transport]{transport::transport}.}
+\item{...}{Further arguments passed to \link[transport:transport]{transport::transport}.}
 }
 \value{
-A named vector of length 2.\cr
+A named vector of length 2.
 \itemize{
 \item Wasserstein_1: The Wasserstein distance of order 1
 \item Wasserstein_2: The Wasserstein distance of order 2

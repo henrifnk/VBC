@@ -12,22 +12,22 @@
 #' projection domain via delta mapping. The steps are equivalent to those in
 #' univariate bias correction via quantile delta mapping.
 #'
-#' @param mp [data.table::data.table] OR [list]\cr
+#' @param mp [data.table::data.table] OR [list] 
 #'  Simulation data from a climate model during projection period. If this is a
 #'  list, the algorithm expects each element to be a member of a model ensemble.
 #'  Each list element is then a data table.
 #'
-#' @param mc [data.table::data.table]\cr
+#' @param mc [data.table::data.table] 
 #'  Simulation data from a climate model during calibration period.
 #'
-#' @param rc [data.table::data.table]\cr
+#' @param rc [data.table::data.table] 
 #'  Historical reference in calibration period.
 #'
-#' @param var_names [character]\cr
+#' @param var_names [character] 
 #'  Names of corrected climate data. Defaults to the column names of the
 #'  observed data `rc`.
 #'
-#' @param margins_controls [list]\cr
+#' @param margins_controls [list] 
 #' A list with arguments to be passed to [kde1d::kde1d()]. Currently, there can be
 #'   * `mult` numeric vector of length one or d; all bandwidths for marginal
 #'   kernel density estimation are multiplied with `mult`. Defaults to
@@ -41,16 +41,16 @@
 #'   discrete integer variables, or one of zi, zinfl, zero-inflated for
 #'   zero-inflated variables.
 #'
-#' @param time_mp [numeric]\cr
+#' @param time_mp [numeric] 
 #' Time vector of the projection period attached to the returned object as a 
 #' column. Defaults to `NA`, which means no time vector is attached.
 #'
-#' @param ... \cr
+#' @param ...  
 #'  Arguments are passed to [rvinecopulib::vinecop] to specify the structure of
 #'  vines and margins. Note that the ellipsis of observed and model data are
 #'  specified with the same arguments.
 #'
-#' @return [data.table::data.table] OR [list]\cr
+#' @return [data.table::data.table] OR [list] 
 #'  The corrected projection period data in `mp`. Additionally the data frame
 #'  contains the attributes `vine_rc`, `kde_rc`, `vine_mp`, and `kde_mp` which
 #'  store the vine copula and kernel density estimation objects of the observed
@@ -141,7 +141,7 @@ check_vbc_args <- function(mp, mc, rc, var_names) {
 #' 
 #' @inheritParams vbc
 #' 
-#' @return [list]\cr
+#' @return [list] 
 #' A list of corrected data frames for each member of the model ensemble.
 #' 
 vbc_ensemble <- function(mp, mc, rc, var_names, margins_controls, time_mp, ...) {

@@ -7,10 +7,10 @@
 model_vine(data, margins_controls, ...)
 }
 \arguments{
-\item{data}{\link{data.frame}\cr
+\item{data}{\link{data.frame}
 Data to estimate the multivariate distribution.}
 
-\item{margins_controls}{\link{list}\cr
+\item{margins_controls}{\link{list}
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
 \itemize{
 \item \code{mult} numeric vector of length one or d; all bandwidths for marginal
@@ -26,8 +26,7 @@ discrete integer variables, or one of zi, zinfl, zero-inflated for
 zero-inflated variables.
 }}
 
-\item{...}{\cr
-Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
+\item{...}{Arguments are passed to \link[rvinecopulib:vinecop]{rvinecopulib::vinecop} to specify the structure of
 vines and margins. Note that the ellipsis of observed and model data are
 specified with the same arguments.}
 }

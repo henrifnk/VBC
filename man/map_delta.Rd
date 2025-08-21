@@ -7,19 +7,19 @@
 map_delta(mp, mph, mp_kde, mc_kde, xmin = NA)
 }
 \arguments{
-\item{mp}{\link{double}\cr
+\item{mp}{\link{double}
 uncorrected climate variable in projection period.}
 
-\item{mph}{\link{double}\cr
+\item{mph}{\link{double}
 corrected climate variable in projection period.}
 
-\item{mp_kde}{\link[kde1d:kde1d]{kde1d::kde1d}\cr
+\item{mp_kde}{\link[kde1d:kde1d]{kde1d::kde1d}
 a kernel density estimation of the climate variable in projection period.}
 
-\item{mc_kde}{\link[kde1d:kde1d]{kde1d::kde1d}\cr
+\item{mc_kde}{\link[kde1d:kde1d]{kde1d::kde1d}
 a kernel density estimation of the climate variable in calibration period.}
 
-\item{xmin}{double(1)\cr
+\item{xmin}{double(1)
 A vector indicating if \code{xmin} is a ratio variable type or any other type (NA).}
 }
 \value{

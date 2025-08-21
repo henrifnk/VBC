@@ -7,27 +7,27 @@
 plot_tails(data, var, xmin = NA, scale_d = 3, mult = 1, length_out = 10000)
 }
 \arguments{
-\item{data}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{data}{\link[data.table:data.table]{data.table::data.table}
 A data.table containing the data to be plotted.}
 
-\item{var}{\link{character}\cr
+\item{var}{\link{character}
 The variable to be plotted. Must be a column of \code{data}.}
 
-\item{xmin}{\link{numeric}\cr
+\item{xmin}{\link{numeric}
 The minimum value of the variable to be plotted. Passed to \link[kde1d:kde1d]{kde1d::kde1d}.
 Default is \code{NA} indicating no lower limit.}
 
-\item{scale_d}{\link{numeric}\cr
+\item{scale_d}{\link{numeric}
 The scaling factor for the density plot between continuous and relative axis.
 Default is \code{3}. Regulate the factor, if continuous density estimates and
 relative frequency are too distinct on the y-axis. Only used for zero
 inflated variables.}
 
-\item{mult}{\link{numeric}\cr
+\item{mult}{\link{numeric}
 Bin width multiplier. Passed to \link[kde1d:kde1d]{kde1d::kde1d}.
 Default is 1 indicating no multiplication.}
 
-\item{length_out}{\link{numeric}\cr
+\item{length_out}{\link{numeric}
 The length of the sequence to be used for the density plot. Default is \code{1e4}.}
 }
 \value{

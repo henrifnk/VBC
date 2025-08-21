@@ -7,10 +7,10 @@
 estimate_margins(dta, margins_controls, kde = NULL)
 }
 \arguments{
-\item{dta}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{dta}{\link[data.table:data.table]{data.table::data.table}
 Data to calculate the margins.}
 
-\item{margins_controls}{\link{list}\cr
+\item{margins_controls}{\link{list}
 A list with arguments to be passed to \code{\link[kde1d:kde1d]{kde1d::kde1d()}}. Currently, there can be
 \itemize{
 \item \code{mult} numeric vector of length one or d; all bandwidths for marginal
@@ -26,7 +26,7 @@ discrete integer variables, or one of zi, zinfl, zero-inflated for
 zero-inflated variables.
 }}
 
-\item{kde}{\link{list}\cr
+\item{kde}{\link{list}
 kernel density estimations.}
 }
 \value{

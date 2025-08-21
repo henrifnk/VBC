@@ -1,33 +1,33 @@
 #' Combine VBC and the Method of fragments
 #' 
-#' @param rc [data.table::data.table]\cr
+#' @param rc [data.table::data.table] 
 #'  Measured (and interpolated) observations during calibration period. 
 #'  Expects one column time.
 #' 
-#' @param mc [data.table::data.table]\cr
+#' @param mc [data.table::data.table] 
 #'  Simulation data from a climate model during calibration period.
 #'  Expects one column time.
 #'
-#' @param mp [data.table::data.table]\cr
+#' @param mp [data.table::data.table] 
 #'  Simulation data from a climate model during projection period.
 #'  Expects one column time.
 #'  
 #' @inheritParams vbc
 #' 
-#' @param t_subs [list]\cr
+#' @param t_subs [list] 
 #' A list of two lists: hours and month. Each list contains the temporal
 #' indicators to subset the data. The first list contains the hours of the day
 #' the length of list marks the number of fragments. The inner list contains the
 #' hour and monthly information to subset the data.
 #' 
-#' @param overlap [integer]\cr
+#' @param overlap [integer] 
 #' The number of times to overlap the temporal indicators.
 #' 
-#' @param cores_t [integer]\cr
+#' @param cores_t [integer] 
 #' The number of cores to use for parallel processing of the temporal 
 #' subsetting. Default is `NA` which means no parallel processing.
 #' 
-#' @param verbose [logical]\cr
+#' @param verbose [logical] 
 #' Print messages during the temporal subsetting.
 #' 
 #' @importFrom parallel mclapply
@@ -42,7 +42,7 @@
 #' rainfall simulation. 1. A regionalized subdaily disaggregation approach. 
 #' In: Water Resour. Res. 48 (1). DOI: 10.1029/2011WR010489.
 #' 
-#' @return [data.table::data.table]\cr
+#' @return [data.table::data.table] 
 #'  The corrected projection period data in `mp`. Additionally the data frame
 #'  contains the attribute `mvd` with one list per temporal subset. In each
 #'  subset `vine_rc`, `kde_rc`, `vine_mp`, and `kde_mp` which store the 
@@ -160,10 +160,10 @@ vbc_tsub = function(mp, mc, rc, var_names = colnames(rc),
 #' @inheritParams model_vine
 #' @inheritParams vbc_tsub
 #' 
-#' @param hrs [integer]\cr
+#' @param hrs [integer] 
 #' The hours of the day to be used for subsetting.
 #' 
-#' @param mnt [integer]\cr
+#' @param mnt [integer] 
 #' The months of the year to be used for subsetting.
 subset_time <- function(data, hrs, mnt, overlap = 1) {
   time <- data$time
@@ -204,11 +204,11 @@ calc_range = function(v, min, max, res, overlap = 1) {
 
 #' @title Invert a list
 #' 
-#' @param list [list]\cr
+#' @param list [list] 
 #' A list of depth 2. The first depth indicates the temporal subset and the
 #' second depth the members of the model ensemble.
 #' 
-#' @return [list]\cr
+#' @return [list] 
 #' A list of depth 2. The first depth indicates the members of the model
 #' ensemble and the second depth the temporal subset.
 #'

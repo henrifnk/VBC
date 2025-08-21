@@ -7,22 +7,22 @@
 #' probabilities of an event t before and after bias correction. A non-invasive
 #' method preserves the model-specific rank structure.
 #'
-#' @param model [data.frame]\cr
+#' @param model [data.frame] 
 #' Simulation climate data from the climate model.
 #'
-#' @param model_correction [data.frame]\cr
+#' @param model_correction [data.frame] 
 #'  Simulation climate data `model` from the climate model corrected by an
 #'  arbitrary bias correction method.
 #'
-#' @param time_p [date]\cr
+#' @param time_p [date] 
 #'  An optional vector with a time point for each observation/row in the
 #'  (corrected) model data. Default is NA which indicates that no temporal
 #'  information are given.
 #'
-#' @param p `numeric(1)`\cr
+#' @param p `numeric(1)` 
 #'  The power of the global MCI. Default is 1.
 #'
-#' @return [data.table::data.table]\cr
+#' @return [data.table::data.table] 
 #' Contains the points of time if supplied in `time_p` and the respective
 #' local MCI. Note that the last time step is truncated while derivation. The
 #' attribute global contains the global MCI, which is the mean over all MCI
@@ -49,7 +49,7 @@ calc_mci <- function(model, model_correction, time_p = NA, p = 1) {
 
 #' @title Calculate Non-Exceedance Probability
 #'
-#' @param data [data.table::data.table]\cr
+#' @param data [data.table::data.table] 
 #' On each of the rows in the data.table, the non-exceedance probability is
 #' calculated. 
 #'  
@@ -74,23 +74,23 @@ calculate_pemp <- function(data) {
 #'
 #' @inheritParams calc_mci
 #'
-#' @param observed [data.frame] \cr
+#' @param observed [data.frame] 
 #'  Measured (and interpolated) observations.
 #'
-#' @param n `integer(1)` \cr
+#' @param n `integer(1)` 
 #'  Length of samples to be drawn from model and observed data.
 #'
-#' @param scale_dta `cahracter(1)` \cr
+#' @param scale_dta `cahracter(1)` 
 #' Scale the data before calculating the Wasserstein distance. Default is
 #' "observed". Possible values are "both", "observed", and "sd". If "both" the
 #' data are scaled to zero mean and unit variance. If "observed" the data are
 #' scaled to zero mean and unit variance of the observed data. If "sd" the data
 #' are scaled to zero mean and unit variance.
 #'
-#' @param ... \cr
+#' @param ...  
 #'  Further arguments passed to [transport::transport].
 #'
-#' @return A named vector of length 2.\cr
+#' @return A named vector of length 2. 
 #' - Wasserstein_1: The Wasserstein distance of order 1
 #' - Wasserstein_2: The Wasserstein distance of order 2
 #'

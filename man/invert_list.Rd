@@ -7,12 +7,12 @@
 invert_list(list)
 }
 \arguments{
-\item{list}{\link{list}\cr
+\item{list}{\link{list}
 A list of depth 2. The first depth indicates the temporal subset and the
 second depth the members of the model ensemble.}
 }
 \value{
-\link{list}\cr
+\link{list}
 A list of depth 2. The first depth indicates the members of the model
 ensemble and the second depth the temporal subset.
 }

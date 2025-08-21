@@ -7,16 +7,16 @@
 subset_time(data, hrs, mnt, overlap = 1)
 }
 \arguments{
-\item{data}{\link{data.frame}\cr
+\item{data}{\link{data.frame}
 Data to estimate the multivariate distribution.}
 
-\item{hrs}{\link{integer}\cr
+\item{hrs}{\link{integer}
 The hours of the day to be used for subsetting.}
 
-\item{mnt}{\link{integer}\cr
+\item{mnt}{\link{integer}
 The months of the year to be used for subsetting.}
 
-\item{overlap}{\link{integer}\cr
+\item{overlap}{\link{integer}
 The number of times to overlap the temporal indicators.}
 }
 \description{

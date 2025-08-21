@@ -9,7 +9,7 @@ expand_margin_controls(controls, dta)
 \arguments{
 \item{controls}{margins_controls}
 
-\item{dta}{\link[data.table:data.table]{data.table::data.table}\cr
+\item{dta}{\link[data.table:data.table]{data.table::data.table}
 Data to calculate the margins.}
 }
 \value{
