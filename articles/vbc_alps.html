@@ -122,12 +122,13 @@ set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13221576" class="external-
 Bavaria (1.0.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13348397" class="external-link uri">https://doi.org/10.5281/zenodo.13348397</a></p></li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">temp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span></span>
-<span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"</span></span>
+<code class="sourceCode R"><span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">.Platform</span><span class="op">$</span><span class="va">OS.type</span> <span class="op">==</span> <span class="st">"windows"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">temp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, method <span class="op">=</span> <span class="st">"wininet"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, method <span class="op">=</span> <span class="st">"libcurl"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="va">temp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".rda"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">temp_file</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">temp_file</span><span class="op">)</span></span></code></pre></div>
@@ -398,7 +399,7 @@ preserved.</p>
 <tbody>
 <tr class="odd">
 <td align="left">kba</td>
-<td align="right">0.037</td>
+<td align="right">0.036</td>
 <td align="right">0.055</td>
 </tr>
 <tr class="even">
@@ -418,7 +419,7 @@ preserved.</p>
 </tr>
 <tr class="odd">
 <td align="left">kbe</td>
-<td align="right">0.022</td>
+<td align="right">0.023</td>
 <td align="right">0.046</td>
 </tr>
 </tbody>
