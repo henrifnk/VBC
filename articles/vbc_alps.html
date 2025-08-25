@@ -64,7 +64,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>VBC in the Alps: Multivariate Bias Correction and Evaluation</h1>
             
-            <h4 data-toc-skip class="date">2025-08-21</h4>
+            <h4 data-toc-skip class="date">2025-08-25</h4>
       
 
       <div class="d-none name"><code>vbc_alps.Rmd</code></div>
@@ -127,7 +127,7 @@ Bavaria (1.0.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.1334
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">.Platform</span><span class="op">$</span><span class="va">OS.type</span> <span class="op">==</span> <span class="st">"windows"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, method <span class="op">=</span> <span class="st">"wininet"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, method <span class="op">=</span> <span class="st">"libcurl"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">temp_file</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">temp_file</span><span class="op">)</span></span></code></pre></div>
@@ -398,7 +398,7 @@ preserved.</p>
 <tbody>
 <tr class="odd">
 <td align="left">kba</td>
-<td align="right">0.036</td>
+<td align="right">0.037</td>
 <td align="right">0.055</td>
 </tr>
 <tr class="even">
@@ -419,7 +419,7 @@ preserved.</p>
 <tr class="odd">
 <td align="left">kbe</td>
 <td align="right">0.022</td>
-<td align="right">0.045</td>
+<td align="right">0.046</td>
 </tr>
 </tbody>
 </table>
