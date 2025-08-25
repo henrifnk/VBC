@@ -62,7 +62,7 @@ url = "https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?dow
 if (.Platform$OS.type == "windows") {
   download.file(url, temp_file, mode = "wb", method = "wininet", quiet = TRUE)
 } else {
-  download.file(url, temp_file, mode = "wb", quiet = TRUE)
+  download.file(url, temp_file, mode = "wb", method = "libcurl", quiet = TRUE)
 }
 load(temp_file)
 unlink(temp_file)
