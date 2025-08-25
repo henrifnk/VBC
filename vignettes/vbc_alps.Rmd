@@ -57,12 +57,13 @@ This exemplary showcases the potentials of the VBC package to correct for the bi
 -   Funk, H. (2024). Bias Correction of CRCM5-LE for Hydrological Bavaria (1.0.0) [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.13348397>
 
 ```{r data}
-temp_file <- tempfile(fileext = ".rds")
 url = "https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"
 if (.Platform$OS.type == "windows") {
+  temp_file <- tempfile(fileext = ".rds")
   download.file(url, temp_file, mode = "wb", method = "wininet", quiet = TRUE)
 } else {
-  download.file(url, temp_file, mode = "wb", method = "libcurl", quiet = TRUE)
+  temp_file <- tempfile(fileext = ".rda")
+  download.file(url, temp_file, mode = "wb", quiet = TRUE)
 }
 load(temp_file)
 unlink(temp_file)
