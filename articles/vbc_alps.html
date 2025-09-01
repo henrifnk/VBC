@@ -122,16 +122,57 @@ set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13221576" class="external-
 Bavaria (1.0.0) [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.13348397" class="external-link uri">https://doi.org/10.5281/zenodo.13348397</a></p></li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="va">.Platform</span><span class="op">$</span><span class="va">OS.type</span> <span class="op">==</span> <span class="st">"windows"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">temp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".rds"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, method <span class="op">=</span> <span class="st">"wininet"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Load all objects from a remote .RData/.rda (and gracefully handle RDS as well)</span></span>
+<span><span class="va">load_remote_objects</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">url</span>,</span>
+<span>                                <span class="va">into</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>,   <span class="co"># where to place the objects</span></span>
+<span>                                <span class="va">quiet</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">tf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".bin"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/on.exit.html" class="external-link">on.exit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">tf</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">method</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/capabilities.html" class="external-link">capabilities</a></span><span class="op">(</span><span class="st">"libcurl"</span><span class="op">)</span><span class="op">)</span> <span class="st">"libcurl"</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"download.file.method"</span>, <span class="st">"auto"</span><span class="op">)</span></span>
+<span>  <span class="va">extra</span>  <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">method</span>, <span class="st">"libcurl"</span><span class="op">)</span><span class="op">)</span> <span class="st">"-L"</span> <span class="kw">else</span> <span class="cn">NULL</span>   <span class="co"># follow redirects</span></span>
+<span></span>
+<span>  <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">tf</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, method <span class="op">=</span> <span class="va">method</span>, extra <span class="op">=</span> <span class="va">extra</span>, quiet <span class="op">=</span> <span class="va">quiet</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Try RData/.rda first (can contain multiple objects)</span></span>
+<span>  <span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">new.env</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">emptyenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">nm</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">tf</span>, envir <span class="op">=</span> <span class="va">e</span><span class="op">)</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">nm</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># copy everything into target env</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">e</span>, all.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="va">nm</span><span class="op">]</span>, envir <span class="op">=</span> <span class="va">into</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">nm</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="co"># Fallback: try RDS (usually one object; could be a named list)</span></span>
+<span>  <span class="va">obj</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">tf</span><span class="op">)</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">is.list</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="va">obj</span>, envir <span class="op">=</span> <span class="va">into</span><span class="op">)</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"rds_object"</span>, <span class="va">obj</span>, envir <span class="op">=</span> <span class="va">into</span><span class="op">)</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="st">"rds_object"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="co"># If both failed, the download is likely an HTML error page or empty</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Downloaded file is neither valid .RData nor .rds (redirect/HTML error likely)."</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"</span></span>
+<span></span>
+<span><span class="co"># Put objects directly into the current chunk's environment (not globalenv)</span></span>
+<span><span class="va">loaded</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">load_remote_objects</span><span class="op">(</span><span class="va">url</span>, into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">loaded</span>, <span class="st">"try-error"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Warning <span class="op">=</span> <span class="st">"Data download failed; skipping downstream code."</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>eval <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>   <span class="co"># optional: skip later chunks</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">temp_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".rda"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url</span>, <span class="va">temp_file</span>, mode <span class="op">=</span> <span class="st">"wb"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">temp_file</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">temp_file</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Loaded objects: "</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">loaded</span>, collapse <span class="op">=</span> <span class="st">", "</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="co"># proceed: rc, mp, mc, ... are now available</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Loaded objects: op_dt, oc_dt, mp_dts, mc_dts, vbc, mbcn, ubc</span></span></code></pre>
 <div class="section level3">
 <h3 id="bias-correction">Bias Correction<a class="anchor" aria-label="anchor" href="#bias-correction"></a>
 </h3>
@@ -140,13 +181,13 @@ demonstration purposes, the bias correction is performed for the winter
 nights in the Allgäuer Hochalpen. The winter nights are defined as the
 hours between 21:00 and 06:00 in the months December, January, and
 February.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">winter_night</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  nightDJF <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span>, month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>We showcase the bias correction on the first 5 members of the
 CRCM5-LE. Therefore we subset the model data.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">members</span> <span class="op">&lt;-</span> <span class="va">mp_dts</span><span class="op">$</span><span class="va">member</span></span>
 <span><span class="va">mem_5</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"kba"</span>, <span class="st">"kbb"</span>, <span class="st">"kbc"</span>, <span class="st">"kbd"</span>, <span class="st">"kbe"</span><span class="op">)</span></span>
 <span><span class="va">members</span> <span class="op">=</span> <span class="va">members</span><span class="op">[</span><span class="va">members</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">mem_5</span><span class="op">]</span></span>
@@ -166,7 +207,7 @@ infinity.</p>
 <p>The function now efficiently corrects the model data for each
 temporal subset in <code>t_subs</code> and each member in
 <code>split_mp</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">margins_controls</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  xmin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NaN</span>, <span class="fl">0</span>, <span class="cn">NaN</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"zi"</span>, <span class="st">"c"</span>, <span class="st">"zi"</span>, <span class="st">"c"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -192,7 +233,7 @@ data with the reference data <code>op_dt</code>. Using
 marginal distribution of a climate variable before and after the bias
 correction with the target reference data. Ideally, the corrected model
 data should be as close as possible to the reference data.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_tails.html">plot_tails</a></span><span class="op">(</span><span class="va">mp_dts</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>                    <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="op">]</span>, <span class="st">"dew"</span>, scale_d <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>           mult <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="va">theme</span> <span class="op">+</span></span>
@@ -211,7 +252,7 @@ data should be as close as possible to the reference data.</p>
 Wasserstein distance between the corrected model data and the reference.
 The Wasserstein distance is a measure of the distance between two
 probability distributions.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wd_post</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">vbc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">mem</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/calc_wasserstein.html">calc_wasserstein</a></span><span class="op">(</span><span class="va">op_dt</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>                           <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">3</span><span class="op">]</span>, <span class="va">mem</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span>,</span>
@@ -279,7 +320,7 @@ probability distributions.</p>
 </table>
 <p>At the univariate level of dew point temperature, the bias correction
 improves the model data for any of the 5 members of the CRCM5-LE.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wd_post</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">vbc</span>, <span class="kw">function</span><span class="op">(</span><span class="va">mem</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/calc_wasserstein.html">calc_wasserstein</a></span><span class="op">(</span><span class="va">op_dt</span><span class="op">[</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>                           <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">mem</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span>
@@ -353,7 +394,7 @@ correction method preserves the course of weather patterns of the model
 data. This way the original characteristics of the climate model are
 still maintained. The MCI is a measure of the preservation of the
 weather patterns.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mci</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mapply.html" class="external-link">mapply</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">before</span>, <span class="va">after</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">idx</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">hour</a></span><span class="op">(</span><span class="va">before</span><span class="op">$</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>                    <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/IDateTime.html" class="external-link">month</a></span><span class="op">(</span><span class="va">before</span><span class="op">$</span><span class="va">time</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -368,7 +409,7 @@ bias correction that did not change the course of the weather patterns
 from the model data. The MCI is limited at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math>
 indicating a maximal change in the course of weather.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mci2020</span> <span class="op">=</span> <span class="va">mci</span><span class="op">[</span><span class="va">mci</span><span class="op">$</span><span class="va">time</span> <span class="op">&gt;</span> <span class="st">"2019-11-01"</span> <span class="op">&amp;</span> <span class="va">mci</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;</span> <span class="st">"2020-03-01"</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mci2020</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">kba</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"lightblue"</span>, linewidth <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
@@ -387,7 +428,7 @@ indicating a maximal change in the course of weather.</p>
 assessment of the correction. With an median inconsistency of 0.03, we
 can assume the weather in winter nights 2019/2020 to be mainly
 preserved.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>median <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">mci</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">median</span><span class="op">)</span>,</span>
 <span>            sd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">mci</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="fl">2</span>, <span class="va">sd</span><span class="op">)</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -409,7 +450,7 @@ preserved.</p>
 </tr>
 <tr class="odd">
 <td align="left">kbc</td>
-<td align="right">0.029</td>
+<td align="right">0.028</td>
 <td align="right">0.060</td>
 </tr>
 <tr class="even">
@@ -419,8 +460,8 @@ preserved.</p>
 </tr>
 <tr class="odd">
 <td align="left">kbe</td>
-<td align="right">0.023</td>
-<td align="right">0.046</td>
+<td align="right">0.022</td>
+<td align="right">0.045</td>
 </tr>
 </tbody>
 </table>
