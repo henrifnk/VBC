@@ -57,16 +57,58 @@ This exemplary showcases the potentials of the VBC package to correct for the bi
 -   Funk, H. (2024). Bias Correction of CRCM5-LE for Hydrological Bavaria (1.0.0) [Data set]. Zenodo. <https://doi.org/10.5281/zenodo.13348397>
 
 ```{r data}
-url = "https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"
-if (.Platform$OS.type == "windows") {
-  temp_file <- tempfile(fileext = ".rds")
-  download.file(url, temp_file, mode = "wb", method = "wininet", quiet = TRUE)
-} else {
-  temp_file <- tempfile(fileext = ".rda")
-  download.file(url, temp_file, mode = "wb", quiet = TRUE)
+# Load all objects from a remote .RData/.rda (and gracefully handle RDS as well)
+load_remote_objects <- function(url,
+                                into = parent.frame(),   # where to place the objects
+                                quiet = TRUE) {
+  tf <- tempfile(fileext = ".bin")
+  on.exit(unlink(tf), add = TRUE)
+
+  method <- if (capabilities("libcurl")) "libcurl" else getOption("download.file.method", "auto")
+  extra  <- if (identical(method, "libcurl")) "-L" else NULL   # follow redirects
+
+  utils::download.file(url, tf, mode = "wb", method = method, extra = extra, quiet = quiet)
+
+  # Try RData/.rda first (can contain multiple objects)
+  e <- new.env(parent = emptyenv())
+  nm <- tryCatch(load(tf, envir = e), error = function(e) character(0))
+
+  if (length(nm)) {
+    # copy everything into target env
+    list2env(as.list(e, all.names = TRUE)[nm], envir = into)
+    return(invisible(nm))
+  }
+
+  # Fallback: try RDS (usually one object; could be a named list)
+  obj <- tryCatch(readRDS(tf), error = function(e) NULL)
+  if (!is.null(obj)) {
+    if (is.list(obj) && !is.null(names(obj))) {
+      list2env(obj, envir = into)
+      return(invisible(names(obj)))
+    } else {
+      assign("rds_object", obj, envir = into)
+      return(invisible("rds_object"))
+    }
+  }
+
+  # If both failed, the download is likely an HTML error page or empty
+  stop("Downloaded file is neither valid .RData nor .rds (redirect/HTML error likely).")
 }
-load(temp_file)
-unlink(temp_file)
+
+```
+```{r}
+url <- "https://zenodo.org/records/13348397/files/PEG-Iller-Kempten_14_12.rda?download=1"
+
+# Put objects directly into the current chunk's environment (not globalenv)
+loaded <- try(load_remote_objects(url, into = environment()), silent = TRUE)
+
+if (inherits(loaded, "try-error")) {
+  knitr::kable(data.frame(Warning = "Data download failed; skipping downstream code."))
+  knitr::opts_chunk$set(eval = FALSE)   # optional: skip later chunks
+} else {
+  message("Loaded objects: ", paste(loaded, collapse = ", "))
+  # proceed: rc, mp, mc, ... are now available
+}
 ```
 
 ## Bias Correction
